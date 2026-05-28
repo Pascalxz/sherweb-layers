@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: theme("fontFamily.sans");
+    color: theme("colors.sherweb.body");
+    background: #ffffff;
+  }
+  body {
+    font-size: 16px;
+    letter-spacing: theme("letterSpacing.body");
+  }
+  h1, h2, h3, h4 {
+    color: theme("colors.sherweb.heading");
+    letter-spacing: theme("letterSpacing.heading");
+    font-weight: 700;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center bg-sherweb-accent hover:bg-sherweb-accentHover text-white font-semibold rounded-sherweb px-6 py-2 tracking-button uppercase text-sm transition-colors;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center border border-sherweb-heading text-sherweb-heading hover:bg-sherweb-bgAlt rounded-sherweb px-6 py-2 tracking-button uppercase text-sm transition-colors;
+  }
+}
