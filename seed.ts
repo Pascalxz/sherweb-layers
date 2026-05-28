@@ -14,16 +14,18 @@
  * peu nombreux mais réels — suffisant pour démontrer le RAG en démo.
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+// Clients construits paresseusement : permet d'importer les données (KNOWLEDGE_CHUNKS…)
+// depuis un autre script sans exiger les variables d'env ni déclencher d'effet de bord.
+let _supabase: SupabaseClient | null = null;
+let _openai: OpenAI | null = null;
+const supabase = (): SupabaseClient =>
+  (_supabase ??= createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!));
+const openai = () => (_openai ??= new OpenAI({ apiKey: process.env.OPENAI_API_KEY! }));
 
-const EMBEDDING_MODEL = "text-embedding-3-small"; // dimension 1536 — DOIT matcher le schéma pgvector
+export const EMBEDDING_MODEL = "text-embedding-3-small"; // dimension 1536 — DOIT matcher le schéma pgvector
 
 // ──────────────────────────────────────────────────────────────────────────
 // 1. DESIGN TOKENS
@@ -244,15 +246,15 @@ export const KNOWLEDGE_CHUNKS = [
 // EXÉCUTION DU SEED
 // ──────────────────────────────────────────────────────────────────────────
 
-async function embed(text: string): Promise<number[]> {
-  const res = await openai.embeddings.create({ model: EMBEDDING_MODEL, input: text });
+export async function embed(text: string): Promise<number[]> {
+  const res = await openai().embeddings.create({ model: EMBEDDING_MODEL, input: text });
   return res.data[0].embedding; // length 1536
 }
 
 async function main() {
   console.log("→ Seeding governance_rules…");
   for (const g of GOVERNANCE_RULES) {
-    const { error } = await supabase.from("governance_rules").upsert({
+    const { error } = await supabase().from("governance_rules").upsert({
       id: g.id,
       category: g.category,
       rule: g.rule,
@@ -263,7 +265,7 @@ async function main() {
 
   console.log("→ Seeding brand config (tokens + tone)…");
   {
-    const { error } = await supabase.from("brand_config").upsert({
+    const { error } = await supabase().from("brand_config").upsert({
       id: "default",
       design_tokens: DESIGN_TOKENS,
       tone_of_voice: TONE_OF_VOICE,
@@ -274,7 +276,7 @@ async function main() {
   console.log("→ Seeding + embedding knowledge_chunks…");
   for (const c of KNOWLEDGE_CHUNKS) {
     const embedding = await embed(`${c.title}\n\n${c.content}`);
-    const { error } = await supabase.from("knowledge_chunks").insert({
+    const { error } = await supabase().from("knowledge_chunks").insert({
       category: c.category,
       title: c.title,
       content: c.content,
@@ -287,7 +289,21 @@ async function main() {
   console.log("✅ Seed terminé.");
 }
 
-main().catch((e) => {
-  console.error("Seed failed:", e);
-  process.exit(1);
-});
+// N'exécute le seed que si le fichier est lancé directement (`tsx seed.ts`),
+// pas lors d'un import depuis un autre script.
+import { realpathSync } from "fs";
+import { fileURLToPath } from "url";
+const invokedDirectly = (() => {
+  try {
+    return !!process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+})();
+
+if (invokedDirectly) {
+  main().catch((e) => {
+    console.error("Seed failed:", e);
+    process.exit(1);
+  });
+}
