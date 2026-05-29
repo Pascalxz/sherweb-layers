@@ -33,20 +33,21 @@ export const EMBEDDING_MODEL = "text-embedding-3-small"; // dimension 1536 — D
 
 export const DESIGN_TOKENS = {
   color: {
-    // Workhorses — voir skill sherweb-brand §1
-    primary: "#0076cb",        // Blue 600 — CTAs outline, titres, liens "Learn more"
-    primaryHover: "#0061aa",   // Blue 700
-    secondary: "#0a96ed",      // Blue 500 — boutons secondaires, liens, icônes
-    accent: "#db4227",         // Red 600 — boutons remplis "Get started", CTA principal
-    accentHover: "#b8351d",    // Red 700
-    headingText: "#363b43",    // Black 900 — H1, H2
-    bodyText: "#434d5b",       // Black 700 — paragraphes
-    secondaryText: "#5a6b80",  // Black 500 — descriptions, captions
+    // Source de vérité : design-system/colors_and_type.css (SW Brand 2025).
+    primary: "#0061AA",        // Blue 700 — marque, liens, CTA outline
+    primaryHover: "#0A4270",   // Blue 900 — hover du bleu marque
+    secondary: "#0A96ED",      // Blue 600 — focus, liens secondaires, icônes
+    accent: "#DB4227",         // Red 600 — CTA principal rempli (à utiliser avec parcimonie)
+    accentHover: "#B93624",    // Red 700 — hover CTA
+    headingText: "#090A0C",    // Ink 900 — titres
+    bodyText: "#363B43",       // Ink 600 — paragraphes
+    secondaryText: "#76889A",  // Slate 500 — descriptions, captions
     background: "#FFFFFF",
-    backgroundAlt: "#f4f6f7",  // Black 50 — sections alternées
-    border: "#e2e7eb",         // Black 100
-    heroDark: "#0a4270",       // Blue 900 — fonds hero sombres
-    footer: "#072a4a",         // Blue 950
+    backgroundTint: "#DFF0FF",  // Blue 100 — bandes de section douces
+    backgroundAlt: "#F4F6F7",  // Slate 100 — sections alternées
+    border: "#E2E7EB",         // Slate 200 — hairline
+    heroDark: "#0A4270",       // Blue 900 — fond hero (stop clair du dégradé)
+    footer: "#072A4A",         // Blue 950 — pied de page / inverse
   },
   typography: {
     fontFamily: "Montserrat, sans-serif",
@@ -85,28 +86,31 @@ export const TONE_OF_VOICE = {
     { name: "Exceptional support", message: "Real support from real people" },
     { name: "Innovation", message: "Expert advice that moves you forward" },
   ],
+  // Les 4 attributs de voix « toujours actifs » (design-system/README.md).
   principles: [
-    "Human and warm — real support from real people",
-    "Partner-oriented — a partner who puts you first, never salesy",
-    "Measurable results — quantify benefits (%, $, time saved)",
-    "Confident and reassuring — easy to work with, we make it simple",
-    "Action-oriented — clear CTAs",
+    "Professional — expert, precise, jamais hype ni familier ; on respecte le temps et l'intelligence du lecteur",
+    "Neutral — factuel, faible densité d'adjectifs ; pas de hype, pas de peur, pas de flatterie",
+    "Confident — on affirme la claim et on l'assume ; pas de hedging ('might', 'could help'), pas d'excuse",
+    "Supportive — partner-first : le lecteur (le MSP) est le héros, Sherweb est le guide ; 'you' + 'we', jamais 'users'",
   ],
   do: [
-    "Use partner-centered language (you, your growth)",
-    "Quantify benefits with proof points",
-    "Offer two CTA levels: strong primary + softer secondary",
-    "Write for the MSP audience (use their vocabulary appropriately)",
+    "Second person, direct: 'You can…', 'We can help'",
+    "Headlines benefit-first: surface un changement ou une opportunité, pas une feature",
+    "Sentence case pour titres, boutons et nav (pas de Title Case)",
+    "CTAs = verbe + nom, 1–3 mots ('Get guide', 'Book a demo', 'Contact sales')",
+    "Toujours deux niveaux de CTA : un fort (rempli rouge) + un doux (secondaire)",
+    "Garder les noms propres tels quels : Microsoft 365, Azure, Acronis, Bitdefender, Dynamics 365",
   ],
   dont: [
-    "Use unexplained technical jargon",
-    "Make impossible promises",
-    "Write generic filler text",
-    "Provide only one CTA with no soft alternative",
-    "Use overly corporate or 'perfect' imagery language",
+    "Pas d'emoji (jamais) — l'iconographie c'est Font Awesome",
+    "Pas de mots fluff : 'innovative', 'synergy', 'disruptive', 'cutting-edge'",
+    "Pas de hedging ni d'excuses ; pas de ton purement vendeur",
+    "Pas de 'Learn more' seul — toujours associé à quoi ('Get guide')",
+    "Pas un seul CTA isolé ; pas de jargon technique non expliqué",
+    "Pas de promesse de résultat garanti non sourcée",
   ],
   bilingual: {
-    note: "Partner-first in both EN and FR. FR is not a literal translation — adapt naturally.",
+    note: "EN et FR (Québec) sont tous deux first-class. Le FR n'est PAS une traduction littérale : adapter naturellement ('les MSP', 'nos experts', 'découvrez'). Phrases compactes pour reflow.",
   },
 } as const;
 
@@ -220,7 +224,7 @@ export const KNOWLEDGE_CHUNKS = [
     category: "brand_assets",
     title: "Système de couleurs",
     content:
-      "Couleur primaire Blue 600 #0076cb (boutons outline, liens, titres). Accent Red 600 #db4227 (boutons remplis Get started, CTA principal). Texte titres Black 900 #363b43. Texte courant Black 700 #434d5b. Fond blanc, sections alternées Black 50 #f4f6f7, bordures Black 100 #e2e7eb.",
+      "Palette blue-forward avec un seul accent rouge. Bleu marque Blue 700 #0061AA (liens, marque, CTA outline). Bleu focus Blue 600 #0A96ED. Bleu accent Blue 500 #34AFFC, bleu clair Blue 300 #7BCAFE. Bleu profond Blue 950 #072A4A (fonds hero sombres, surfaces inverses). Tint Blue 100 #DFF0FF (bandes de section douces). Accent Red 600 #DB4227 (CTA principal rempli, à utiliser avec parcimonie), hover Red 700 #B93624. Texte ink Black 900 #090A0C, texte secondaire Slate #76889A, bordures #E2E7EB, surface #F4F6F7. Pas de violet, pas de teal, pas de neutres chauds. Dégradés uniquement sur les covers hero (#0A4270 → #072A4A).",
   },
   {
     category: "brand_assets",
@@ -238,7 +242,37 @@ export const KNOWLEDGE_CHUNKS = [
     category: "brand_assets",
     title: "Patterns de CTA et boutons",
     content:
-      "CTA principal: Red 600 #db4227, texte blanc, border-radius 8px. CTA secondaire: outline Black 900 ou Blue 600, fond transparent. Liens texte: Blue 600 #0076cb, soulignés au survol. Toujours offrir deux niveaux: un CTA fort (Get started) et un doux (Request discovery call).",
+      "CTA principal: Red 600 #DB4227, texte blanc, border-radius 8px, weight 500, letter-spacing 1px, sentence case (pas uppercase). Hover: Red 700 #B93624. CTA secondaire: outline rouge sur fond blanc, se remplit au survol. Bouton bleu marque: #0061AA, hover #0A4270. Liens texte: Blue 700 #0061AA, soulignés 2px au survol. Libellés = verbe + nom, 1–3 mots (Get guide, Book a demo, Contact sales) — jamais 'Learn more' seul. Toujours deux niveaux: un CTA fort + un doux.",
+  },
+  {
+    category: "brand_assets",
+    title: "Voix de marque (4 attributs)",
+    content:
+      "La voix Sherweb tient 4 constantes sur chaque contenu. Professional: expert, précis, jamais hype ni familier. Neutral: factuel, faible densité d'adjectifs, pas de peur ni de flatterie. Confident: on affirme et on assume, pas de hedging ('might', 'could'), pas d'excuse. Supportive: partner-first, le MSP est le héros et Sherweb le guide — 'you' + 'we', jamais 'users'. Le ton se module par surface: marketing (chaleureux, direct), onboarding (utile), product UI (calme, label-first), erreurs/legal (factuel).",
+  },
+  {
+    category: "brand_assets",
+    title: "Règles d'écriture: casing, emoji, bilingue",
+    content:
+      "Sentence case pour titres, boutons et items de nav (pas de Title Case). All-caps réservé aux petits labels (letter-spacing 1px, 12–14px). Noms propres gardent leur casse: Microsoft 365, Azure, Acronis, Bitdefender, Dynamics 365, Cloud PBX. PAS d'emoji — l'iconographie est Font Awesome. Éviter les mots fluff: innovative, synergy, disruptive, cutting-edge. Bilingue EN/FR (Québec) tous deux first-class; le FR s'adapte naturellement ('les MSP', 'nos experts', 'découvrez'), jamais traduit littéralement.",
+  },
+  {
+    category: "product_knowledge",
+    title: "Catalogue produits et vendors",
+    content:
+      "La marketplace Sherweb agrège des solutions cloud pour MSP: Microsoft 365, Azure, Dynamics 365, Acronis (cyber protect, backup), Bitdefender, Dropsuite (backup SaaS), Proofpoint et IRONSCALES (sécurité email), Office Protect, Keeper et NordPass (gestion de mots de passe), NordLayer (accès réseau sécurisé), SentinelOne, Huntress, Check Point Harmony, Palisade, ConnectSecure, Cloud PBX, plus des outils d'automatisation/MSP comme Rewst, Kalibr8, Monjur, Nerdio et afiai. Les logos vendors s'affichent en chips/cartes sur fond clair #F4F6F7.",
+  },
+  {
+    category: "approved_content",
+    title: "Mission, vision et valeurs",
+    content:
+      "Mission: être le fournisseur de référence de solutions cloud business-class, en simplifiant l'accès et la gestion du cloud via une plateforme unifiée et une expérience one-stop pour partenaires et clients. Valeurs: Integrity (agir de façon éthique et transparente, dans le meilleur intérêt de l'équipe); Passion (soif d'excellence, amour du métier, engagement au succès de l'équipe); Teamwork (s'appuyer sur l'expertise des autres pour des résultats remarquables); Client orientation (écouter les besoins des clients, offrir une expérience de bout en bout exceptionnelle).",
+  },
+  {
+    category: "approved_content",
+    title: "Ce que les partenaires obtiennent",
+    content:
+      "Trois piliers de valeur. Marketplace: large catalogue de solutions cloud et sécurité. Partner services: white-label helpdesk, dedicated account management, Microsoft consultations, MDR for Microsoft 365, MDF consultations, presales services, technical & sales training, partner toolbox. Team of experts: passionate cloud experts, personalized advice, guided onboarding, sales assistance, 24/7 technical support, marketing support, aide à résoudre les défis business, tech account manager. Message: aidez vos clients à atteindre leurs objectifs tout en enrichissant votre offre, en augmentant vos marges et en devenant leur conseiller de confiance.",
   },
 ] as const;
 
@@ -271,6 +305,15 @@ async function main() {
       tone_of_voice: TONE_OF_VOICE,
     });
     if (error) console.error("  ✗ brand_config:", error.message);
+  }
+
+  console.log("→ Clearing knowledge_chunks (re-seed idempotent)…");
+  {
+    const { error } = await supabase()
+      .from("knowledge_chunks")
+      .delete()
+      .neq("id", "00000000-0000-0000-0000-000000000000"); // match all rows
+    if (error) console.error("  ✗ clear:", error.message);
   }
 
   console.log("→ Seeding + embedding knowledge_chunks…");

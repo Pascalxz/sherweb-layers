@@ -9,9 +9,9 @@
         fontFamily: { sans: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"] },
         colors: {
           sherweb: {
-            primary: "#0076cb", primaryHover: "#0061aa", secondary: "#0a96ed",
-            accent: "#db4227", accentHover: "#b8351d", heading: "#363b43",
-            body: "#434d5b", muted: "#5a6b80", bgAlt: "#f4f6f7", border: "#e2e7eb",
+            primary: "#0061aa", primaryHover: "#0a4270", secondary: "#0a96ed",
+            accent: "#db4227", accentHover: "#b93624", heading: "#090a0c",
+            body: "#363b43", muted: "#76889a", tint: "#dff0ff", bgAlt: "#f4f6f7", border: "#e2e7eb",
             heroDark: "#0a4270", footer: "#072a4a"
           }
         },
@@ -21,6 +21,6 @@
     }
   };
   var s = document.createElement("style");
-  s.textContent = "body{font-family:Montserrat,sans-serif;margin:0;color:#434d5b;background:#fff}";
+  s.textContent = "body{font-family:Montserrat,sans-serif;margin:0;color:#363b43;background:#fff}";
   document.head.appendChild(s);
 })();

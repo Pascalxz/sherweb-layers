@@ -1,0 +1,21 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;font-family:var(--ff-sans);}
+.card{padding:22px 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;}
+label{font:500 12px var(--ff-sans);color:#4E5B6C;letter-spacing:.25px;}
+input,select,textarea{font:400 14px var(--ff-sans);color:#090A0C;background:#fff;border:1px solid #E2E7EB;border-radius:8px;padding:10px 12px;outline:none;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{border-color:#34AFFC;box-shadow:0 0 0 3px rgba(52,175,252,.2);}
+.f{display:flex;flex-direction:column;gap:4px;}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.chk{display:flex;align-items:center;gap:8px;font:400 14px var(--ff-sans);color:#090A0C;}
+.chk input{appearance:none;width:18px;height:18px;border:1.5px solid #A3B0BD;border-radius:4px;padding:0;cursor:pointer;position:relative;}
+.chk input:checked{background:#0061AA;border-color:#0061AA;}
+.chk input:checked::after{content:"✓";color:#fff;font-size:12px;font-weight:700;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+</style></head><body><div class="card">
+<div class="row">
+<div class="f"><label>Business email</label><input placeholder="alex@msp.co" value="alex@msp.co"/></div>
+<div class="f"><label>Company size</label><select><option>1–10</option><option selected>10–50</option><option>50+</option></select></div>
+</div>
+<div class="f"><label>Message</label><textarea rows="2" placeholder="What are you looking to automate?"></textarea></div>
+<div class="chk"><input type="checkbox" checked/> Keep me in the loop on partner news</div>
+</div></body></html>

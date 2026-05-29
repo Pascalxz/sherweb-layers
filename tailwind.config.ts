@@ -12,19 +12,21 @@ const config: Config = {
         sans: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
+        // Source de vérité : design-system/colors_and_type.css (SW Brand 2025).
         sherweb: {
-          primary: "#0076cb",
-          primaryHover: "#0061aa",
-          secondary: "#0a96ed",
-          accent: "#db4227",
-          accentHover: "#b8351d",
-          heading: "#363b43",
-          body: "#434d5b",
-          muted: "#5a6b80",
-          bgAlt: "#f4f6f7",
-          border: "#e2e7eb",
-          heroDark: "#0a4270",
-          footer: "#072a4a",
+          primary: "#0061aa", // Blue 700 — marque, liens, CTA outline
+          primaryHover: "#0a4270", // Blue 900 — hover du bleu marque
+          secondary: "#0a96ed", // Blue 600 — focus / liens secondaires
+          accent: "#db4227", // Red 600 — CTA principal rempli
+          accentHover: "#b93624", // Red 700 — hover CTA
+          heading: "#090a0c", // Ink 900 — titres
+          body: "#363b43", // Ink 600 — corps de texte
+          muted: "#76889a", // Slate 500 — texte secondaire
+          tint: "#dff0ff", // Blue 100 — sections douces
+          bgAlt: "#f4f6f7", // Slate 100 — sections alternées
+          border: "#e2e7eb", // Slate 200 — hairline
+          heroDark: "#0a4270", // Blue 900 — fond hero (stop clair du dégradé)
+          footer: "#072a4a", // Blue 950 — pied de page / inverse
         },
       },
       letterSpacing: {

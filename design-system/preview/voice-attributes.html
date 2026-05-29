@@ -1,0 +1,82 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;font-family:var(--ff-sans);color:#090A0C;}
+.card{padding:20px 22px;box-sizing:border-box;}
+.tag{font:600 10px var(--ff-sans);color:#76889A;letter-spacing:.08em;text-transform:uppercase;margin:0 0 14px;}
+
+.hero{
+  border:1px solid #0A4270;
+  background:linear-gradient(180deg,#0A4270 0%, #072A4A 100%);
+  color:#fff;
+  border-radius:14px;
+  padding:18px 20px;
+  margin:0 0 14px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:18px;
+  align-items:start;
+}
+.hero .stamp{
+  font:800 22px/0.95 var(--ff-sans);
+  letter-spacing:-.4px;
+  padding:14px 16px;
+  border:1.5px solid #34AFFC;
+  border-radius:10px;
+  color:#A0E3FF;
+  white-space:nowrap;
+  display:flex;flex-direction:column;gap:2px;
+}
+.hero .stamp em{font-style:normal;color:#fff;}
+.hero .stamp small{font:600 9px var(--ff-sans);letter-spacing:.18em;color:#76B8EA;text-transform:uppercase;margin-top:6px;}
+.hero .body h3{margin:0 0 6px;font:700 15px var(--ff-sans);letter-spacing:-.1px;color:#fff;}
+.hero .body p{margin:0 0 8px;font:500 12px var(--ff-sans);line-height:1.5;color:#BCE2FF;}
+.hero .body p:last-child{margin:0;}
+.hero .body q{font:600 12px var(--ff-sans);color:#fff;line-height:1.45;display:block;border-left:2px solid #DB4227;padding:2px 0 2px 10px;quotes:"\201C" "\201D";}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.attr{border:1px solid #E2E7EB;border-radius:12px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;background:#fff;}
+.attr .name{font:700 14px var(--ff-sans);letter-spacing:-.1px;color:#072A4A;display:flex;align-items:center;gap:8px;}
+.attr .dot{width:8px;height:8px;border-radius:9999px;flex:none;}
+.attr .desc{font:500 11.5px var(--ff-sans);color:#4E5B6C;line-height:1.45;}
+.attr .ex{font:600 11.5px var(--ff-sans);color:#0A4270;border-top:1px dashed #E2E7EB;padding-top:8px;margin-top:2px;line-height:1.4;}
+.attr .ex::before{content:"e.g. ";color:#A3B0BD;font-weight:500;}
+</style></head><body><div class="card">
+
+<p class="tag">Brand promise — 2026 campaign principle</p>
+<div class="hero">
+  <div class="stamp"><em>Expect</em>Better<small>2026 voice</small></div>
+  <div class="body">
+    <h3>The artifact <i>is</i> the brand.</h3>
+    <p>The campaign itself should embody Expect Better. Email and questionnaire feel like one continuous reflection — not a marketing artifact wrapping a measurement instrument.</p>
+    <q>This is the first survey I've ever received that doesn't feel like a survey.</q>
+  </div>
+</div>
+
+<p class="tag">Voice attributes — always-on</p>
+<div class="grid">
+
+  <div class="attr">
+    <div class="name"><span class="dot" style="background:#0061AA"></span>Professional</div>
+    <div class="desc">Expert, precise, never casual or hype-y. We respect the reader's time and IQ.</div>
+    <div class="ex">"Microsoft's partner program has changed. Keep earning incentives."</div>
+  </div>
+
+  <div class="attr">
+    <div class="name"><span class="dot" style="background:#76889A"></span>Neutral</div>
+    <div class="desc">Factual, low adjective-density. No hype, no fear, no flattery. Let the value speak.</div>
+    <div class="ex">"Acronis Cyber Protect — backup and security in one console."</div>
+  </div>
+
+  <div class="attr">
+    <div class="name"><span class="dot" style="background:#DB4227"></span>Confident</div>
+    <div class="desc">We make claims and stand by them. No hedging ("might", "could help you"), no apology.</div>
+    <div class="ex">"You'll grow margin on every Microsoft seat."</div>
+  </div>
+
+  <div class="attr">
+    <div class="name"><span class="dot" style="background:#34AFFC"></span>Supportive</div>
+    <div class="desc">Partner-first. The reader is the hero; we're the guide. "You" + "we", never "users".</div>
+    <div class="ex">"You bring the client relationship. We handle the licensing."</div>
+  </div>
+
+</div></div></body></html>

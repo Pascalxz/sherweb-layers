@@ -1,0 +1,49 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+html,body{margin:0;padding:0;background:#fff;font-family:var(--ff-sans);color:#090A0C;}
+.card{padding:20px 22px;box-sizing:border-box;}
+.tag{font:600 10px var(--ff-sans);color:#76889A;letter-spacing:.08em;text-transform:uppercase;margin:0 0 14px;}
+.rows{display:flex;flex-direction:column;gap:10px;}
+.row{display:grid;grid-template-columns:90px 1fr 1fr;gap:10px;align-items:stretch;}
+.ctx{font:600 11px var(--ff-sans);color:#363B43;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;}
+.cell{border:1px solid #E2E7EB;border-radius:10px;padding:10px 12px;font:500 12.5px var(--ff-sans);line-height:1.4;display:flex;gap:8px;align-items:flex-start;background:#fff;}
+.cell.no{background:#FDF2F0;border-color:#F3CFC7;color:#7A2113;}
+.cell.yes{background:#EAF5EF;border-color:#BBE0CC;color:#0D4B2A;}
+.badge{font:700 9.5px var(--ff-sans);letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;flex:none;margin-top:1px;}
+.badge.no{background:#DB4227;color:#fff;}
+.badge.yes{background:#1F8A5B;color:#fff;}
+</style></head><body><div class="card">
+<p class="tag">Do &amp; Don't — write like Sherweb</p>
+<div class="rows">
+
+  <div class="row">
+    <div class="ctx">Headline</div>
+    <div class="cell no"><span class="badge no">No</span>Revolutionary cloud solutions that empower MSPs.</div>
+    <div class="cell yes"><span class="badge yes">Yes</span>The Microsoft incentive cuts. Here's how to keep margin.</div>
+  </div>
+
+  <div class="row">
+    <div class="ctx">CTA</div>
+    <div class="cell no"><span class="badge no">No</span>Learn more</div>
+    <div class="cell yes"><span class="badge yes">Yes</span>Get the guide</div>
+  </div>
+
+  <div class="row">
+    <div class="ctx">Sub-copy</div>
+    <div class="cell no"><span class="badge no">No</span>Our innovative platform leverages best-in-class synergies.</div>
+    <div class="cell yes"><span class="badge yes">Yes</span>One console for Microsoft 365, Azure and Acronis. Your team learns it once.</div>
+  </div>
+
+  <div class="row">
+    <div class="ctx">Empty state</div>
+    <div class="cell no"><span class="badge no">No</span>Oops! Nothing here yet 🙈</div>
+    <div class="cell yes"><span class="badge yes">Yes</span>No subscriptions yet. Add a product to get started.</div>
+  </div>
+
+  <div class="row">
+    <div class="ctx">Error</div>
+    <div class="cell no"><span class="badge no">No</span>Something went wrong. Please try again later.</div>
+    <div class="cell yes"><span class="badge yes">Yes</span>We couldn't reach Microsoft Graph. Retry, or contact our experts.</div>
+  </div>
+
+</div></div></body></html>

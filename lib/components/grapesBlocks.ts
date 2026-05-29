@@ -24,6 +24,7 @@ const DEFAULTS: Record<string, string> = {
   STAT_LABEL: "MSP partners",
   CTA_HEADING: "Ready for a partner who puts you first?",
   CTA_TAGLINE: "Let's talk about your growth.",
+  VENDOR_HEADING: "The right cloud solutions for your MSP",
   FOOTER_TEXT: "© Sherweb — the cloud marketplace that powers your potential.",
 };
 

@@ -1,0 +1,313 @@
+/* =====================================================================
+   Sherweb Design System — Colors & Type tokens
+   Derived from SW Brand 2025.fig (Figma file).
+   ===================================================================== */
+
+/* ---------- Fonts ---------- */
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Thin.woff")            format("woff"), url("./fonts/Montserrat-Thin.ttf")            format("truetype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-ThinItalic.ttf")       format("truetype"); font-weight: 100; font-style: italic; font-display: swap; }
+
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-ExtraLight.woff")      format("woff"), url("./fonts/Montserrat-ExtraLight.ttf")      format("truetype"); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-ExtraLightItalic.woff") format("woff"), url("./fonts/Montserrat-ExtraLightItalic.ttf") format("truetype"); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Light.woff")           format("woff"), url("./fonts/Montserrat-Light.ttf")           format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-LightItalic.woff")     format("woff"), url("./fonts/Montserrat-LightItalic.ttf")     format("truetype"); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Regular.woff")         format("woff"), url("./fonts/Montserrat-Regular.ttf")         format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Italic.woff")          format("woff"), url("./fonts/Montserrat-Italic.ttf")          format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Medium.woff")          format("woff"), url("./fonts/Montserrat-Medium.ttf")          format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-MediumItalic.woff")    format("woff"), url("./fonts/Montserrat-MediumItalic.ttf")    format("truetype"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-SemiBold.woff")        format("woff"), url("./fonts/Montserrat-SemiBold.ttf")        format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-SemiBoldItalic.woff")  format("woff"), url("./fonts/Montserrat-SemiBoldItalic.ttf")  format("truetype"); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Bold.woff")            format("woff"), url("./fonts/Montserrat-Bold.ttf")            format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-BoldItalic.woff")      format("woff"), url("./fonts/Montserrat-BoldItalic.ttf")      format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-ExtraBold.woff")       format("woff"), url("./fonts/Montserrat-ExtraBold.ttf")       format("truetype"); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-ExtraBoldItalic.woff") format("woff"), url("./fonts/Montserrat-ExtraBoldItalic.ttf") format("truetype"); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-Black.woff")           format("woff"), url("./fonts/Montserrat-Black.ttf")           format("truetype"); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Montserrat"; src: url("./fonts/Montserrat-BlackItalic.woff")     format("woff"), url("./fonts/Montserrat-BlackItalic.ttf")     format("truetype"); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* ---------- Font Awesome 7 Pro (icon fonts, LOCAL) ----------
+   Families wired locally — no CDN required for the font files themselves.
+   Style → family map (matches official FA naming):
+     • "Font Awesome 7 Pro"            — Classic Pro (Thin/Light/Regular/Solid)
+     • "Font Awesome 7 Brands"         — Brand glyphs
+     • "Font Awesome 7 Duotone"        — Classic Duotone (Thin/Light/Regular/Solid)
+     • "Font Awesome 7 Sharp"          — Sharp (Thin/Light/Regular/Solid)
+     • "Font Awesome 7 Sharp Duotone"  — Sharp Duotone (Thin/Light/Regular/Solid)
+   Weights: 100 Thin, 300 Light, 400 Regular, 900 Solid.
+   For class-name → unicode mapping we still pull the FA Free CSS from CDN
+   in preview files; the font-family is then overridden by the rules below
+   so the local Pro glyphs are what actually render.
+*/
+
+/* Classic Pro */
+@font-face { font-family: "Font Awesome 7 Pro"; src: url("./fonts/Font_Awesome_7_Pro-Thin-100.otf")    format("opentype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Pro"; src: url("./fonts/Font_Awesome_7_Pro-Light-300.otf")   format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Pro"; src: url("./fonts/Font_Awesome_7_Pro-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Pro"; src: url("./fonts/Font_Awesome_7_Pro-Solid-900.otf")   format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* Brands */
+@font-face { font-family: "Font Awesome 7 Brands"; src: url("./fonts/Font_Awesome_7_Brands-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Classic Duotone */
+@font-face { font-family: "Font Awesome 7 Duotone"; src: url("./fonts/Font_Awesome_7_Duotone-Thin-100.otf")    format("opentype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Duotone"; src: url("./fonts/Font_Awesome_7_Duotone-Light-300.otf")   format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Duotone"; src: url("./fonts/Font_Awesome_7_Duotone-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Duotone"; src: url("./fonts/Font_Awesome_7_Duotone-Solid-900.otf")   format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* Sharp */
+@font-face { font-family: "Font Awesome 7 Sharp"; src: url("./fonts/Font_Awesome_7_Sharp-Thin-100.otf")    format("opentype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp"; src: url("./fonts/Font_Awesome_7_Sharp-Light-300.otf")   format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp"; src: url("./fonts/Font_Awesome_7_Sharp-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp"; src: url("./fonts/Font_Awesome_7_Sharp-Solid-900.otf")   format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* Sharp Duotone */
+@font-face { font-family: "Font Awesome 7 Sharp Duotone"; src: url("./fonts/Font_Awesome_7_Sharp_Duotone-Thin-100.otf")    format("opentype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp Duotone"; src: url("./fonts/Font_Awesome_7_Sharp_Duotone-Light-300.otf")   format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp Duotone"; src: url("./fonts/Font_Awesome_7_Sharp_Duotone-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Font Awesome 7 Sharp Duotone"; src: url("./fonts/Font_Awesome_7_Sharp_Duotone-Solid-900.otf")   format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* Back-compat aliases for the old "FA Sharp" family name */
+@font-face { font-family: "FA Sharp";         src: url("./fonts/Font_Awesome_7_Sharp-Thin-100.otf")    format("opentype"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "FA Sharp";         src: url("./fonts/Font_Awesome_7_Sharp-Light-300.otf")   format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "FA Sharp";         src: url("./fonts/Font_Awesome_7_Sharp-Regular-400.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "FA Sharp";         src: url("./fonts/Font_Awesome_7_Sharp-Solid-900.otf")   format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "FA Sharp Duotone"; src: url("./fonts/Font_Awesome_7_Sharp_Duotone-Solid-900.otf") format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* =====================================================================
+   FA utility classes — work alongside the Free CDN class→unicode map.
+   These OVERRIDE the family/weight the CDN CSS sets, so glyphs come from
+   our local Pro files. To opt OUT of Pro and use Free, drop the override.
+   ===================================================================== */
+
+/* Classic (default Pro) */
+.fa, .fas, .fa-solid,
+.far, .fa-regular,
+.fal, .fa-light,
+.fat, .fa-thin {
+  font-family: "Font Awesome 7 Pro" !important;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+.fat, .fa-thin    { font-weight: 100 !important; }
+.fal, .fa-light   { font-weight: 300 !important; }
+.far, .fa-regular { font-weight: 400 !important; }
+.fas, .fa-solid,
+.fa               { font-weight: 900 !important; }
+
+/* Brands */
+.fab, .fa-brands {
+  font-family: "Font Awesome 7 Brands" !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Classic Duotone */
+.fad, .fa-duotone {
+  font-family: "Font Awesome 7 Duotone" !important;
+  font-weight: 900 !important;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+.fa-duotone.fa-thin    { font-weight: 100 !important; }
+.fa-duotone.fa-light   { font-weight: 300 !important; }
+.fa-duotone.fa-regular { font-weight: 400 !important; }
+.fa-duotone.fa-solid   { font-weight: 900 !important; }
+
+/* Sharp — combine .fa-sharp with weight modifier */
+.fa-sharp,
+.fa-sharp.fa-thin,
+.fa-sharp.fa-light,
+.fa-sharp.fa-regular,
+.fa-sharp.fa-solid {
+  font-family: "Font Awesome 7 Sharp" !important;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+.fa-sharp.fa-thin    { font-weight: 100 !important; }
+.fa-sharp.fa-light   { font-weight: 300 !important; }
+.fa-sharp.fa-regular { font-weight: 400 !important; }
+.fa-sharp,
+.fa-sharp.fa-solid   { font-weight: 900 !important; }
+
+/* Sharp Duotone */
+.fa-sharp-duotone,
+.fa-sharp.fa-duotone {
+  font-family: "Font Awesome 7 Sharp Duotone" !important;
+  font-weight: 900 !important;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+.fa-sharp-duotone.fa-thin,
+.fa-sharp.fa-duotone.fa-thin    { font-weight: 100 !important; }
+.fa-sharp-duotone.fa-light,
+.fa-sharp.fa-duotone.fa-light   { font-weight: 300 !important; }
+.fa-sharp-duotone.fa-regular,
+.fa-sharp.fa-duotone.fa-regular { font-weight: 400 !important; }
+.fa-sharp-duotone.fa-solid,
+.fa-sharp.fa-duotone.fa-solid   { font-weight: 900 !important; }
+
+/* Legacy class names from earlier preview files — keep working */
+.fa-sharp-thin    { font-family: "Font Awesome 7 Sharp" !important; font-weight: 100 !important; line-height: 1; display: inline-block; }
+.fa-sharp-light   { font-family: "Font Awesome 7 Sharp" !important; font-weight: 300 !important; line-height: 1; display: inline-block; }
+.fa-sharp-regular { font-family: "Font Awesome 7 Sharp" !important; font-weight: 400 !important; line-height: 1; display: inline-block; }
+.fa-sharp-solid   { font-family: "Font Awesome 7 Sharp" !important; font-weight: 900 !important; line-height: 1; display: inline-block; }
+
+:root {
+  /* ---------- Brand core ---------- */
+  --sw-blue-950: #072A4A;     /* deep brand blue - dark bg */
+  --sw-blue-900: #0A4270;     /* gradient stop */
+  --sw-blue-700: #0061AA;     /* primary blue, links, brand */
+  --sw-blue-600: #0A96ED;     /* bright focus blue */
+  --sw-blue-500: #34AFFC;     /* bright accent blue */
+  --sw-blue-400: #76B8EA;     /* mid blue */
+  --sw-blue-300: #7BCAFE;     /* playful light blue */
+  --sw-blue-200: #A0E3FF;     /* pale blue */
+  --sw-blue-150: #BCE2FF;     /* tint */
+  --sw-blue-100: #DFF0FF;     /* section bg */
+  --sw-blue-050: #CBF0FF;     /* extra pale */
+
+  --sw-red-700:  #B93624;     /* hover */
+  --sw-red-600:  #DB4227;     /* primary CTA red */
+  --sw-red-500:  #ED573C;     /* accent / hover surface */
+
+  /* ---------- Neutrals ---------- */
+  --sw-black:      #000000;
+  --sw-ink-900:    #090A0C;   /* body ink */
+  --sw-ink-800:    #1F2A37;
+  --sw-ink-700:    #2F2D2E;
+  --sw-ink-600:    #363B43;
+  --sw-ink-500:    #4E5B6C;
+  --sw-ink-400:    #676D75;
+  --sw-ink-300:    #6B7280;
+  --sw-slate-500:  #76889A;   /* secondary text */
+  --sw-slate-400:  #A3B0BD;
+  --sw-slate-300:  #C9D1D8;
+  --sw-slate-200:  #E2E7EB;
+  --sw-slate-150:  #E5E7EB;
+  --sw-slate-100:  #F4F6F7;   /* surface tint */
+  --sw-white:      #FFFFFF;
+
+  /* ---------- Semantic ---------- */
+  --color-bg:            var(--sw-white);
+  --color-bg-muted:      var(--sw-slate-100);
+  --color-bg-tint:       var(--sw-blue-100);
+  --color-bg-inverse:    var(--sw-blue-950);
+  --color-surface:       var(--sw-white);
+  --color-surface-alt:   var(--sw-slate-100);
+
+  --color-fg:            var(--sw-ink-900);
+  --color-fg-muted:      var(--sw-slate-500);
+  --color-fg-subtle:     var(--sw-slate-400);
+  --color-fg-inverse:    var(--sw-white);
+
+  --color-brand:         var(--sw-blue-700);
+  --color-brand-hover:   var(--sw-blue-600);
+  --color-accent:        var(--sw-red-600);
+  --color-accent-hover:  var(--sw-red-700);
+
+  --color-border:        var(--sw-slate-150);
+  --color-border-strong: var(--sw-slate-300);
+  --color-focus-ring:    var(--sw-blue-500);
+
+  /* ---------- Gradients (brand) ---------- */
+  --sw-grad-ocean:        linear-gradient(180deg, #0A4270 0%, #072A4A 100%);
+  --sw-grad-sky:          linear-gradient(180deg, #DFF0FF 0%, #FFFFFF 100%);
+  --sw-grad-blue-linear:  linear-gradient(180deg, #34AFFC 0%, #0061AA 100%);
+
+  /* ---------- Font families ---------- */
+  --ff-sans:    "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ff-display: var(--ff-sans);
+  --ff-mono:    ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+
+  /* ---------- Type scale (web) ---------- */
+  --fs-display-lg: 64px;  --lh-display-lg: 72px;  --ls-display-lg: -1.5px;
+  --fs-display-md: 48px;  --lh-display-md: 56px;  --ls-display-md: -1px;
+  --fs-display-sm: 36px;  --lh-display-sm: 48px;  --ls-display-sm: -0.75px;
+  --fs-headline-lg: 32px; --lh-headline-lg: 40px; --ls-headline-lg: -0.5px;
+  --fs-headline-md: 24px; --lh-headline-md: 32px; --ls-headline-md: -0.25px;
+  --fs-headline-rg: 20px; --lh-headline-rg: 24px; --ls-headline-rg: -0.25px;
+  --fs-headline-sm: 18px; --lh-headline-sm: 24px; --ls-headline-sm: 0;
+  --fs-body-lg: 16px;     --lh-body-lg: 24px;     --ls-body-lg: 0.25px;
+  --fs-body-md: 14px;     --lh-body-md: 20px;     --ls-body-md: 0.25px;
+  --fs-body-sm: 12px;     --lh-body-sm: 16px;     --ls-body-sm: 0.25px;
+  --fs-btn-xs: 12px; --fs-btn-sm: 14px; --fs-btn-md: 16px; --fs-btn-lg: 20px;
+
+  /* ---------- Radii ---------- */
+  --radius-xs:  2px;
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-xl:  12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-4xl: 40px;
+  --radius-pill: 9999px;
+
+  /* ---------- Shadows (tailwind-ish; used in figma) ---------- */
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.08);
+  --shadow:    0 1px 3px 0 rgba(0,0,0,0.10), 0 1px 2px -1px rgba(0,0,0,0.10);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.10);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.10);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+
+  /* ---------- Spacing (8pt scale) ---------- */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px; --space-24: 96px;
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(.2,.7,.2,1);
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --dur-fast: 150ms;
+  --dur: 220ms;
+  --dur-slow: 320ms;
+}
+
+/* =====================================================================
+   Semantic type classes — use these directly in markup
+   ===================================================================== */
+html { font-family: var(--ff-sans); color: var(--color-fg); }
+body { margin: 0; font-family: var(--ff-sans); color: var(--color-fg); background: var(--color-bg); -webkit-font-smoothing: antialiased; }
+
+.display-lg { font-family: var(--ff-display); font-weight: 700; font-size: var(--fs-display-lg); line-height: var(--lh-display-lg); letter-spacing: var(--ls-display-lg); }
+.display-md { font-family: var(--ff-display); font-weight: 700; font-size: var(--fs-display-md); line-height: var(--lh-display-md); letter-spacing: var(--ls-display-md); }
+.display-sm { font-family: var(--ff-display); font-weight: 700; font-size: var(--fs-display-sm); line-height: var(--lh-display-sm); letter-spacing: var(--ls-display-sm); }
+
+.headline-lg { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-lg); line-height: var(--lh-headline-lg); letter-spacing: var(--ls-headline-lg); }
+.headline-md { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-md); line-height: var(--lh-headline-md); letter-spacing: var(--ls-headline-md); }
+.headline-rg { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-rg); line-height: var(--lh-headline-rg); letter-spacing: var(--ls-headline-rg); }
+.headline-sm { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-sm); line-height: var(--lh-headline-sm); letter-spacing: var(--ls-headline-sm); }
+
+.body-lg { font-family: var(--ff-sans); font-weight: 400; font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); letter-spacing: var(--ls-body-lg); }
+.body-md { font-family: var(--ff-sans); font-weight: 400; font-size: var(--fs-body-md); line-height: var(--lh-body-md); letter-spacing: var(--ls-body-md); }
+.body-sm { font-family: var(--ff-sans); font-weight: 400; font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); letter-spacing: var(--ls-body-sm); }
+
+.label-md { font-family: var(--ff-sans); font-weight: 500; font-size: 14px; line-height: 16px; letter-spacing: 0.25px; text-transform: none; }
+.label-sm { font-family: var(--ff-sans); font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: 0.25px; }
+.btn-label { font-family: var(--ff-sans); font-weight: 500; letter-spacing: 1px; }
+
+/* =====================================================================
+   Semantic element defaults — optional; opt in by adding .sw-type to root
+   ===================================================================== */
+.sw-type h1, .sw-type .h1 { font-family: var(--ff-display); font-weight: 700; font-size: var(--fs-display-md); line-height: var(--lh-display-md); letter-spacing: var(--ls-display-md); margin: 0 0 var(--space-4); }
+.sw-type h2, .sw-type .h2 { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-lg); line-height: var(--lh-headline-lg); letter-spacing: var(--ls-headline-lg); margin: 0 0 var(--space-3); }
+.sw-type h3, .sw-type .h3 { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-md); line-height: var(--lh-headline-md); letter-spacing: var(--ls-headline-md); margin: 0 0 var(--space-2); }
+.sw-type h4, .sw-type .h4 { font-family: var(--ff-sans); font-weight: 700; font-size: var(--fs-headline-rg); line-height: var(--lh-headline-rg); margin: 0 0 var(--space-2); }
+.sw-type p,  .sw-type .p  { font-family: var(--ff-sans); font-weight: 400; font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); color: var(--color-fg); margin: 0 0 var(--space-4); }
+.sw-type small { font-size: var(--fs-body-sm); color: var(--color-fg-muted); }
+.sw-type a { color: var(--color-brand); text-decoration: none; }
+.sw-type a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.sw-type code { font-family: var(--ff-mono); font-size: 0.92em; background: var(--sw-slate-100); padding: 1px 6px; border-radius: var(--radius-sm); }

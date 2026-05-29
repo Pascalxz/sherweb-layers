@@ -34,8 +34,8 @@ export const COMPONENT_LIBRARY: ComponentSpec[] = [
   <h1 class="text-3xl md:text-4xl font-bold tracking-heading mb-4">{{TITLE}}</h1>
   <p class="text-lg text-white/85 max-w-2xl mx-auto mb-8">{{SUBTITLE}}</p>
   <div class="flex items-center justify-center gap-4 flex-wrap">
-    <a href="#" data-sw-cta="primary" class="inline-flex items-center justify-center bg-sherweb-accent hover:bg-sherweb-accentHover text-white font-semibold rounded-sherweb px-6 py-2 tracking-button uppercase text-sm">{{CTA_PRIMARY}}</a>
-    <a href="#" data-sw-cta="secondary" class="inline-flex items-center justify-center border border-white text-white hover:bg-white/10 rounded-sherweb px-6 py-2 tracking-button uppercase text-sm">{{CTA_SECONDARY}}</a>
+    <a href="#" data-sw-cta="primary" class="inline-flex items-center justify-center bg-sherweb-accent hover:bg-sherweb-accentHover text-white font-semibold rounded-sherweb px-5 py-3 tracking-button text-base">{{CTA_PRIMARY}}</a>
+    <a href="#" data-sw-cta="secondary" class="inline-flex items-center justify-center border border-white text-white hover:bg-white/10 rounded-sherweb px-5 py-3 tracking-button text-base">{{CTA_SECONDARY}}</a>
   </div>
 </section>`,
   },
@@ -79,19 +79,51 @@ export const COMPONENT_LIBRARY: ComponentSpec[] = [
   <h2 class="text-2xl font-bold tracking-heading text-sherweb-heading mb-2">{{CTA_HEADING}}</h2>
   <p class="text-sherweb-body mb-6 tracking-body">{{CTA_TAGLINE}}</p>
   <div class="flex items-center justify-center gap-4 flex-wrap">
-    <a href="#" data-sw-cta="primary" class="inline-flex items-center justify-center bg-sherweb-accent hover:bg-sherweb-accentHover text-white font-semibold rounded-sherweb px-6 py-2 tracking-button uppercase text-sm">{{CTA_PRIMARY}}</a>
-    <a href="#" data-sw-cta="secondary" class="inline-flex items-center justify-center border border-sherweb-heading text-sherweb-heading hover:bg-sherweb-bgAlt rounded-sherweb px-6 py-2 tracking-button uppercase text-sm">{{CTA_SECONDARY}}</a>
+    <a href="#" data-sw-cta="primary" class="inline-flex items-center justify-center bg-sherweb-accent hover:bg-sherweb-accentHover text-white font-semibold rounded-sherweb px-5 py-3 tracking-button text-base">{{CTA_PRIMARY}}</a>
+    <a href="#" data-sw-cta="secondary" class="inline-flex items-center justify-center border border-sherweb-heading text-sherweb-heading hover:bg-sherweb-bgAlt rounded-sherweb px-5 py-3 tracking-button text-base">{{CTA_SECONDARY}}</a>
+  </div>
+</section>`,
+  },
+  {
+    name: "vendor-strip",
+    description:
+      "Bande de logos de vendors/partenaires sur cartes claires (fond Slate 100). " +
+      "Utilise UNIQUEMENT des logos existants via <img src=\"/brand/vendors/<slug>.svg\">. " +
+      "Slugs disponibles : acronis, proofpoint, ironscales, keeper, nordpass, nordlayer, dropsuite, officeprotect, rewst, kalibr8, monjur, afiai. " +
+      "Pour les marques sans SVG local (Microsoft 365, Azure…), écris le nom en texte dans la carte.",
+    template: `<section data-sw-component="vendor-strip" class="bg-white px-8 py-12">
+  <p class="text-center text-sherweb-muted text-sm tracking-button uppercase mb-6">{{VENDOR_HEADING}}</p>
+  <div class="max-w-4xl mx-auto grid grid-cols-3 sm:grid-cols-4 gap-4">
+    <div class="flex items-center justify-center bg-sherweb-bgAlt rounded-sherweb h-20 p-4">
+      <img src="/brand/vendors/acronis.svg" alt="Acronis" class="max-h-7 max-w-full" />
+    </div>
+    <div class="flex items-center justify-center bg-sherweb-bgAlt rounded-sherweb h-20 p-4">
+      <img src="/brand/vendors/proofpoint.svg" alt="Proofpoint" class="max-h-7 max-w-full" />
+    </div>
+    <div class="flex items-center justify-center bg-sherweb-bgAlt rounded-sherweb h-20 p-4">
+      <img src="/brand/vendors/keeper.svg" alt="Keeper" class="max-h-7 max-w-full" />
+    </div>
+    <div class="flex items-center justify-center bg-sherweb-bgAlt rounded-sherweb h-20 p-4">
+      <img src="/brand/vendors/nordlayer.svg" alt="NordLayer" class="max-h-7 max-w-full" />
+    </div>
   </div>
 </section>`,
   },
   {
     name: "footer",
-    description: "Pied de page sobre. Fond Blue 950. Mention de marque discrète.",
+    description: "Pied de page sobre. Fond Blue 950. Logo Sherweb blanc + mention discrète.",
     template: `<footer data-sw-component="footer" class="bg-sherweb-footer text-white/70 px-8 py-8 text-center text-sm tracking-body">
+  <img src="/brand/Logo_Sherweb.svg" alt="Sherweb" class="h-7 mx-auto mb-3 brightness-0 invert" />
   <p>{{FOOTER_TEXT}}</p>
 </footer>`,
   },
 ];
+
+/** Slugs de logos vendors disponibles dans /public/brand/vendors/. */
+export const VENDOR_SLUGS = [
+  "acronis", "proofpoint", "ironscales", "keeper", "nordpass", "nordlayer",
+  "dropsuite", "officeprotect", "rewst", "kalibr8", "monjur", "afiai",
+] as const;
 
 /** Section "librairie de composants" injectée dans le system prompt. */
 export function buildComponentLibraryPrompt(): string {
@@ -127,9 +159,9 @@ tailwind.config = {
       fontFamily: { sans: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"] },
       colors: {
         sherweb: {
-          primary: "#0076cb", primaryHover: "#0061aa", secondary: "#0a96ed",
-          accent: "#db4227", accentHover: "#b8351d", heading: "#363b43",
-          body: "#434d5b", muted: "#5a6b80", bgAlt: "#f4f6f7", border: "#e2e7eb",
+          primary: "#0061aa", primaryHover: "#0a4270", secondary: "#0a96ed",
+          accent: "#db4227", accentHover: "#b93624", heading: "#090a0c",
+          body: "#363b43", muted: "#76889a", tint: "#dff0ff", bgAlt: "#f4f6f7", border: "#e2e7eb",
           heroDark: "#0a4270", footer: "#072a4a"
         }
       },
@@ -139,7 +171,7 @@ tailwind.config = {
   }
 };
 </script>
-<style>body{font-family:Montserrat,sans-serif;margin:0;color:#434d5b;background:#fff}</style>
+<style>body{font-family:Montserrat,sans-serif;margin:0;color:#363b43;background:#fff}</style>
 </head>
 <body>
 ${bodyHtml}
