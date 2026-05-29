@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { outputMeta } from "@/lib/layerData";
-import type { WSGen } from "./types";
+import type { GovRule, WSGen } from "./types";
 import Studio from "./Studio";
 import TeamActivity from "./TeamActivity";
 import Governance from "./Governance";
@@ -20,9 +20,11 @@ function initials(email: string): string {
 export default function Workspace({
   initialGens,
   userEmail,
+  governance,
 }: {
   initialGens: WSGen[];
   userEmail: string;
+  governance: GovRule[];
 }) {
   const [view, setView] = useState<View>("studio");
   const [gens, setGens] = useState<WSGen[]>(initialGens);
@@ -118,7 +120,7 @@ export default function Workspace({
                 />
               )}
               {view === "activity" && <TeamActivity items={gens} onOpen={openCanvas} />}
-              {view === "governance" && <Governance />}
+              {view === "governance" && <Governance initialRules={governance} />}
             </div>
           )}
         </main>

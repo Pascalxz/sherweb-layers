@@ -72,7 +72,8 @@ export async function buildContext(
   // 2. Governance rules.
   const { data: govRows, error: govErr } = await supabase
     .from("governance_rules")
-    .select("id, category, rule, metadata");
+    .select("id, category, rule, metadata")
+    .eq("enabled", true);
   if (govErr) throw new Error(`contextBuilder: governance_rules — ${govErr.message}`);
   const governance = (govRows ?? []) as GovernanceRule[];
 

@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { outputMeta } from "@/lib/layerData";
 import type { Engine, GenerationMetadata, Lang, OutputType } from "@/lib/types";
 import Workspace from "./ws/Workspace";
-import type { WSGen } from "./ws/types";
+import type { GovCategory, GovRule, WSGen } from "./ws/types";
 import { makeTitle, timeAgo } from "./ws/types";
 
 export const dynamic = "force-dynamic";
@@ -67,5 +67,18 @@ export default async function AppHome() {
     };
   });
 
-  return <Workspace initialGens={initialGens} userEmail={userEmail} />;
+  // Règles de gouvernance réelles (éditables dans la vue « La couche »).
+  const { data: govRows } = await supabase
+    .from("governance_rules")
+    .select("id, category, rule, enabled")
+    .order("created_at", { ascending: true });
+  const governance: GovRule[] = (govRows ?? []).map((g) => ({
+    id: g.id as string,
+    category: g.category as GovCategory,
+    rule: g.rule as string,
+    enabled: (g.enabled as boolean) ?? true,
+  }));
+
+  return <Workspace initialGens={initialGens} userEmail={userEmail} governance={governance} />;
 }
+

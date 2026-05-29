@@ -1,5 +1,13 @@
 import type { Engine, Lang, OutputType } from "@/lib/types";
 
+export type GovCategory = "legal" | "brand" | "compliance";
+export interface GovRule {
+  id: string;
+  category: GovCategory;
+  rule: string;
+  enabled: boolean;
+}
+
 // Génération hydratée pour l'UI workspace (issue de la DB ou d'une génération live).
 export interface WSGen {
   id: string;
