@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { renderDocument } from "@/lib/components/htmlLibrary";
 
 export interface HistoryEntry {
@@ -51,11 +52,21 @@ export default function HistoryList({ entries }: { entries: HistoryEntry[] }) {
               </div>
             </button>
             {open && (
-              <iframe
-                title={`preview-${e.id}`}
-                srcDoc={renderDocument(e.html)}
-                className="w-full h-[500px] border-0 border-t border-sherweb-border"
-              />
+              <>
+                <div className="flex justify-end px-4 py-2 border-t border-sherweb-border bg-sherweb-bgAlt">
+                  <Link
+                    href={`/app/canvas/${e.id}`}
+                    className="text-xs font-semibold text-sherweb-primary hover:underline"
+                  >
+                    Éditer dans le canvas →
+                  </Link>
+                </div>
+                <iframe
+                  title={`preview-${e.id}`}
+                  srcDoc={renderDocument(e.html)}
+                  className="w-full h-[500px] border-0 border-t border-sherweb-border"
+                />
+              </>
             )}
           </li>
         );

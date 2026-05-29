@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { renderDocument } from "@/lib/components/htmlLibrary";
 import type { Engine, GenerateResponse, Lang, OutputType } from "@/lib/types";
 
@@ -94,11 +95,19 @@ export default function Generator() {
                 Code
               </ViewTab>
             </div>
-            <span className="text-xs text-sherweb-muted">
-              {result.model}
-              {result.ragChunkTitles.length > 0 &&
-                ` · RAG: ${result.ragChunkTitles.length} chunk(s)`}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-sherweb-muted">
+                {result.model}
+                {result.ragChunkTitles.length > 0 &&
+                  ` · RAG: ${result.ragChunkTitles.length} chunk(s)`}
+              </span>
+              <Link
+                href={`/app/canvas/${result.generationId}`}
+                className="text-xs font-semibold text-sherweb-primary hover:underline"
+              >
+                Ouvrir dans le canvas →
+              </Link>
+            </div>
           </div>
 
           {view === "preview" ? (
