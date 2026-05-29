@@ -112,6 +112,11 @@ export const TONE_OF_VOICE = {
   bilingual: {
     note: "EN et FR (Québec) sont tous deux first-class. Le FR n'est PAS une traduction littérale : adapter naturellement ('les MSP', 'nos experts', 'découvrez'). Phrases compactes pour reflow.",
   },
+  // Résumé de voix éditable depuis l'app (vue « La couche »).
+  voice: {
+    fr: "Voix : professionnelle, neutre, confiante, solidaire. Vouvoiement (« vous » = le MSP, « nous » = Sherweb). Casse phrase, pas de Title Case. CTA = verbe + nom (« Obtenir le guide »). Bénéfice d'abord, jamais de mots creux (innovant, synergie). Pas d'emoji.",
+    en: 'Voice: professional, neutral, confident, supportive. Second person ("you" = the MSP, "we" = Sherweb). Sentence case, never Title Case. CTAs are verb + noun ("Get the guide"). Benefit-first, no filler words. No emoji.',
+  },
 } as const;
 
 // ──────────────────────────────────────────────────────────────────────────

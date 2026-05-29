@@ -116,6 +116,7 @@ function assembleSystemPrompt(
   const proofPoints = collectProofPoints(governance);
 
   const toneSection = [
+    ...(tone.voice?.[lang] ? [`Résumé de voix : ${tone.voice[lang]}`] : []),
     `Proposition de valeur : ${tone.valueProposition}`,
     `Tagline CTA : ${tone.ctaTagline}`,
     `Piliers : ${tone.pillars.map((p) => `${p.name} (${p.message})`).join(" · ")}`,

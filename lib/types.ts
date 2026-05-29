@@ -34,6 +34,8 @@ export interface ToneOfVoice {
   do: string[];
   dont: string[];
   bilingual: { note: string };
+  // Résumé de voix éditable depuis l'app (injecté en tête du tone), par langue.
+  voice?: { fr: string; en: string };
 }
 
 export interface BrandConfig {
@@ -79,6 +81,7 @@ export interface GenerationMetadata {
   engine: Engine;
   ragChunkTitles: string[];
   ragChunkCount: number;
+  systemPrompt?: string;
 }
 
 export interface GenerateRequest {
@@ -93,4 +96,5 @@ export interface GenerateResponse {
   html: string;
   model: string;
   ragChunkTitles: string[];
+  systemPrompt: string;
 }

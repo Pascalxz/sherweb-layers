@@ -21,10 +21,12 @@ export default function Workspace({
   initialGens,
   userEmail,
   governance,
+  voice,
 }: {
   initialGens: WSGen[];
   userEmail: string;
   governance: GovRule[];
+  voice: { fr: string; en: string };
 }) {
   const [view, setView] = useState<View>("studio");
   const [gens, setGens] = useState<WSGen[]>(initialGens);
@@ -120,7 +122,7 @@ export default function Workspace({
                 />
               )}
               {view === "activity" && <TeamActivity items={gens} onOpen={openCanvas} />}
-              {view === "governance" && <Governance initialRules={governance} />}
+              {view === "governance" && <Governance initialRules={governance} initialVoice={voice} />}
             </div>
           )}
         </main>

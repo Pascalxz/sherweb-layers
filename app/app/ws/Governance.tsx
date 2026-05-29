@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { MODULES, TONE } from "@/lib/layerData";
+import { MODULES } from "@/lib/layerData";
 import type { GovCategory, GovRule } from "./types";
 
 const CATEGORIES: GovCategory[] = ["legal", "brand", "compliance"];
 
-export default function Governance({ initialRules }: { initialRules: GovRule[] }) {
+export default function Governance({
+  initialRules,
+  initialVoice,
+}: {
+  initialRules: GovRule[];
+  initialVoice: { fr: string; en: string };
+}) {
   const [rules, setRules] = useState<GovRule[]>(initialRules);
+  const [voice, setVoice] = useState(initialVoice);
   const [adding, setAdding] = useState(false);
   const [newCat, setNewCat] = useState<GovCategory>("brand");
   const [newRule, setNewRule] = useState("");
@@ -78,6 +85,21 @@ export default function Governance({ initialRules }: { initialRules: GovRule[] }
     }
   }
 
+  async function saveVoice(lang: "fr" | "en", text: string) {
+    if (text.trim() === voice[lang] || text.trim().length < 5) return;
+    setVoice((v) => ({ ...v, [lang]: text.trim() }));
+    try {
+      const res = await fetch("/api/tone", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lang, text }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+    } catch (e) {
+      setErr(e instanceof Error ? `Tone : ${e.message}` : "Échec tone.");
+    }
+  }
+
   const activeCount = rules.filter((r) => r.enabled).length;
 
   return (
@@ -101,7 +123,24 @@ export default function Governance({ initialRules }: { initialRules: GovRule[] }
           {(["fr", "en"] as const).map((l) => (
             <div key={l} className="tov-block">
               <span className="tov-lang">{l.toUpperCase()}</span>
-              <p>{TONE[l]}</p>
+              <textarea
+                defaultValue={voice[l]}
+                onBlur={(e) => saveVoice(l, e.target.value)}
+                rows={4}
+                style={{
+                  flex: 1,
+                  border: "1px solid transparent",
+                  borderRadius: 8,
+                  padding: "6px 8px",
+                  font: "inherit",
+                  fontSize: 13,
+                  lineHeight: 1.55,
+                  color: "var(--sw-ink-500)",
+                  resize: "vertical",
+                  background: "transparent",
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--color-border)")}
+              />
             </div>
           ))}
         </div>

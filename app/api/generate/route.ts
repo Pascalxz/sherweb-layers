@@ -83,6 +83,7 @@ export async function POST(request: Request) {
       engine: engine as Engine,
       ragChunkTitles: ctx.ragChunks.map((c) => c.title),
       ragChunkCount: ctx.ragChunks.length,
+      systemPrompt: ctx.systemPrompt,
     };
 
     const { data: inserted, error: insertErr } = await supabase
@@ -111,6 +112,7 @@ export async function POST(request: Request) {
       html,
       model: result.model,
       ragChunkTitles: metadata.ragChunkTitles,
+      systemPrompt: ctx.systemPrompt,
     };
     return NextResponse.json(response);
   } catch (e) {

@@ -64,6 +64,7 @@ export default async function AppHome() {
       user: email,
       ago: timeAgo(g.created_at),
       source: "live",
+      systemPrompt: g.metadata?.systemPrompt,
     };
   });
 
@@ -79,6 +80,17 @@ export default async function AppHome() {
     enabled: (g.enabled as boolean) ?? true,
   }));
 
-  return <Workspace initialGens={initialGens} userEmail={userEmail} governance={governance} />;
+  // Tone of voice éditable (brand_config.tone_of_voice.voice).
+  const { data: brandRow } = await supabase
+    .from("brand_config")
+    .select("tone_of_voice")
+    .eq("id", "default")
+    .single();
+  const tv = (brandRow?.tone_of_voice ?? {}) as { voice?: { fr?: string; en?: string } };
+  const voice = { fr: tv.voice?.fr ?? "", en: tv.voice?.en ?? "" };
+
+  return (
+    <Workspace initialGens={initialGens} userEmail={userEmail} governance={governance} voice={voice} />
+  );
 }
 

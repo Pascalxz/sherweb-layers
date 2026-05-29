@@ -111,6 +111,7 @@ export default function Studio({
       user: userEmail,
       ago: "à l'instant",
       source: "live",
+      systemPrompt: result.systemPrompt,
     };
     setTimeout(() => onComplete(gen), 750);
   }

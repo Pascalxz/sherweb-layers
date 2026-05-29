@@ -1,10 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import { renderDocument } from "@/lib/components/htmlLibrary";
 import { MODULES, GOVERNANCE, outputMeta } from "@/lib/layerData";
 import type { WSGen } from "./types";
+
+// GrapesJS casse en SSR → import client-only (piège connu CLAUDE.md).
+const InlineEditor = dynamic(() => import("./InlineEditor"), {
+  ssr: false,
+  loading: () => (
+    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--sw-slate-400)" }}>
+      Chargement de l&apos;éditeur…
+    </div>
+  ),
+});
+
+type Tab = "preview" | "edit" | "code";
 
 export default function CanvasView({
   gen,
@@ -15,8 +27,9 @@ export default function CanvasView({
   onClose: () => void;
   transparencyOpen?: boolean;
 }) {
-  const [tab, setTab] = useState<"preview" | "code">("preview");
+  const [tab, setTab] = useState<Tab>("preview");
   const [sideOpen, setSideOpen] = useState(transparencyOpen);
+  const [html, setHtml] = useState(gen.html);
 
   return (
     <div className="canvas-wrap">
@@ -44,27 +57,26 @@ export default function CanvasView({
           <button className={"cv-tab" + (tab === "preview" ? " on" : "")} onClick={() => setTab("preview")}>
             <i className="fa-solid fa-eye"></i>Aperçu
           </button>
+          <button className={"cv-tab" + (tab === "edit" ? " on" : "")} onClick={() => setTab("edit")}>
+            <i className="fa-solid fa-pen-ruler"></i>Édition visuelle
+          </button>
           <button className={"cv-tab" + (tab === "code" ? " on" : "")} onClick={() => setTab("code")}>
             <i className="fa-solid fa-code"></i>Code
           </button>
-        </div>
-
-        <div className="cv-actions" style={{ marginLeft: 12 }}>
-          <Link href={`/app/canvas/${gen.id}`} className="btn btn-brand">
-            <i className="fa-solid fa-pen-ruler"></i>Édition visuelle
-          </Link>
         </div>
       </div>
 
       <div className="cv-body">
         <div className="cv-stage">
-          <div className="cv-frame-pad">
-            {tab === "preview" ? (
-              <iframe className="cv-frame" title="preview" srcDoc={renderDocument(gen.html)} />
-            ) : (
-              <textarea className="cv-code" readOnly value={gen.html} />
-            )}
-          </div>
+          {tab === "preview" && (
+            <div className="cv-frame-pad">
+              <iframe className="cv-frame" title="preview" srcDoc={renderDocument(html)} />
+            </div>
+          )}
+          {tab === "edit" && (
+            <InlineEditor generationId={gen.id} initialHtml={html} onSaved={(h) => setHtml(h)} />
+          )}
+          {tab === "code" && <textarea className="cv-code" readOnly value={html} />}
         </div>
 
         <div className={"cv-side" + (sideOpen ? "" : " collapsed")}>
@@ -107,7 +119,7 @@ export default function CanvasView({
                 ))}
               </div>
 
-              <div className="cv-side-sec" style={{ borderBottom: 0 }}>
+              <div className="cv-side-sec">
                 <div className="cv-side-label">Règles de gouvernance · {GOVERNANCE.length}</div>
                 {GOVERNANCE.map((g) => (
                   <div key={g.id} className="cv-rule">
@@ -116,6 +128,18 @@ export default function CanvasView({
                   </div>
                 ))}
               </div>
+
+              {gen.systemPrompt && (
+                <div className="cv-side-sec" style={{ borderBottom: 0 }}>
+                  <div className="cv-side-label">System prompt envoyé au moteur</div>
+                  <details className="cv-prompt">
+                    <summary>
+                      <i className="fa-solid fa-terminal"></i> Voir le prompt complet ({gen.systemPrompt.length.toLocaleString("fr")} car.)
+                    </summary>
+                    <pre>{gen.systemPrompt}</pre>
+                  </details>
+                </div>
+              )}
             </div>
           )}
         </div>

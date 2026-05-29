@@ -23,6 +23,7 @@ export interface WSGen {
   user: string;
   ago: string;
   source: "live" | "seed";
+  systemPrompt?: string;
 }
 
 export function makeTitle(prompt: string, typeFr: string): string {
