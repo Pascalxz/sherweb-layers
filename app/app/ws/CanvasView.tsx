@@ -88,7 +88,13 @@ export default function CanvasView({
       <div className="cv-body">
         <div className="cv-stage">
           {tab === "comments" && (
-            <WriterComments generationId={gen.id} html={html} currentUserId={currentUserId} />
+            <WriterComments
+              generationId={gen.id}
+              html={html}
+              currentUserId={currentUserId}
+              canEdit={canEdit || myRoles.includes("writer")}
+              onSaved={(h) => setHtml(h)}
+            />
           )}
           {tab === "preview" && (
             <div className="cv-frame-pad">

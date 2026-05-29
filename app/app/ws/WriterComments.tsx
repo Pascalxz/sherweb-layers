@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Comment {
   id: string;
@@ -15,59 +15,90 @@ interface Comment {
 function escapeHtml(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
+const renderTag = (t: string) => (["h1", "h2", "h3"].includes(t) ? t : "p");
 
 export default function WriterComments({
   generationId,
   html,
   currentUserId,
+  canEdit,
+  onSaved,
 }: {
   generationId: string;
   html: string;
   currentUserId: string;
+  canEdit: boolean;
+  onSaved?: (html: string) => void;
 }) {
-  // Extraire le texte (le rédacteur voit la copie, pas le design).
-  const segs = useMemo(() => {
-    if (typeof window === "undefined") return [] as { tag: string; text: string }[];
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    return Array.from(doc.querySelectorAll("h1,h2,h3,p,li,a"))
-      .map((el) => ({ tag: el.tagName.toLowerCase(), text: (el.textContent ?? "").trim() }))
-      .filter((s) => s.text.length > 0);
-  }, [html]);
-
+  const edRef = useRef<HTMLDivElement>(null);
+  const origDocRef = useRef<Document | null>(null);
+  const origElsRef = useRef<Element[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [pending, setPending] = useState<{ seg: number; quote: string; x: number; y: number } | null>(null);
   const [composing, setComposing] = useState<{ seg: number; quote: string } | null>(null);
   const [draft, setDraft] = useState("");
-  const docRef = useRef<HTMLDivElement>(null);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "dirty">("idle");
 
-  async function load() {
-    const res = await fetch(`/api/comments?generationId=${generationId}`);
-    if (res.ok) setComments((await res.json()).comments ?? []);
-  }
+  // Initialise le document éditable UNE fois (sinon le curseur saute).
   useEffect(() => {
-    load();
+    if (typeof window === "undefined" || !edRef.current) return;
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const els = Array.from(doc.querySelectorAll("h1,h2,h3,p,li,a"));
+    origDocRef.current = doc;
+    origElsRef.current = els;
+    // Charge les commentaires puis construit le HTML éditable avec surlignage best-effort.
+    (async () => {
+      let loaded: Comment[] = [];
+      const res = await fetch(`/api/comments?generationId=${generationId}`);
+      if (res.ok) loaded = (await res.json()).comments ?? [];
+      setComments(loaded);
+      const segHtml = els
+        .map((el, i) => {
+          const text = (el.textContent ?? "").trim();
+          let inner = escapeHtml(text);
+          for (const c of loaded.filter((c) => c.seg_index === i && !c.resolved && c.quote)) {
+            const eq = escapeHtml(c.quote as string);
+            if (inner.includes(eq)) inner = inner.replace(eq, `<span class="wc-hl">${eq}</span>`);
+          }
+          return `<${renderTag(el.tagName.toLowerCase())} data-seg="${i}" class="wc-seg ${el.tagName.toLowerCase()}">${inner || "&nbsp;"}</${renderTag(el.tagName.toLowerCase())}>`;
+        })
+        .join("");
+      if (edRef.current) edRef.current.innerHTML = segHtml || "<p class='wc-seg p'>Aucun texte.</p>";
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generationId]);
 
   function onMouseUp() {
     const sel = window.getSelection();
-    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-      setPending(null);
-      return;
-    }
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) return setPending(null);
     let node = sel.anchorNode as HTMLElement | null;
     while (node && node.nodeType === 3) node = node.parentElement;
     let segEl: HTMLElement | null = node;
     while (segEl && !segEl.dataset?.seg) segEl = segEl.parentElement;
-    if (!segEl || !docRef.current?.contains(segEl)) {
-      setPending(null);
-      return;
-    }
+    if (!segEl || !edRef.current?.contains(segEl)) return setPending(null);
     const rect = sel.getRangeAt(0).getBoundingClientRect();
     setPending({ seg: Number(segEl.dataset.seg), quote: sel.toString().trim().slice(0, 300), x: rect.left + rect.width / 2, y: rect.top });
   }
 
-  async function save() {
+  function startComment() {
+    if (!pending) return;
+    // Surligne la sélection courante (façon Word) sans re-render React.
+    const sel = window.getSelection();
+    try {
+      if (sel && !sel.isCollapsed) {
+        const span = document.createElement("span");
+        span.className = "wc-hl";
+        sel.getRangeAt(0).surroundContents(span);
+        sel.removeAllRanges();
+      }
+    } catch {
+      /* sélection multi-éléments : on garde quand même le commentaire */
+    }
+    setComposing({ seg: pending.seg, quote: pending.quote });
+    setPending(null);
+  }
+
+  async function saveComment() {
     if (!composing || !draft.trim()) return;
     const res = await fetch("/api/comments", {
       method: "POST",
@@ -84,9 +115,7 @@ export default function WriterComments({
   async function toggleResolved(c: Comment) {
     setComments((cs) => cs.map((x) => (x.id === c.id ? { ...x, resolved: !x.resolved } : x)));
     await fetch(`/api/comments/${c.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ resolved: !c.resolved }),
+      method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resolved: !c.resolved }),
     });
   }
   async function remove(c: Comment) {
@@ -94,59 +123,73 @@ export default function WriterComments({
     await fetch(`/api/comments/${c.id}`, { method: "DELETE" });
   }
 
-  function segHtml(text: string, segIndex: number) {
-    let out = escapeHtml(text);
-    const quotes = comments.filter((c) => c.seg_index === segIndex && !c.resolved && c.quote).map((c) => c.quote as string);
-    for (const q of quotes) {
-      const eq = escapeHtml(q);
-      if (out.includes(eq)) out = out.replace(eq, `<mark>${eq}</mark>`);
+  // Sauvegarde du TEXTE édité → réinjecte dans le HTML d'origine → PATCH.
+  async function saveDoc() {
+    const doc = origDocRef.current, els = origElsRef.current, ed = edRef.current;
+    if (!doc || !ed) return;
+    setSaveState("saving");
+    ed.querySelectorAll("[data-seg]").forEach((node) => {
+      const i = Number((node as HTMLElement).dataset.seg);
+      if (els[i]) els[i].textContent = (node.textContent ?? "").trim();
+    });
+    const newHtml = doc.body.innerHTML;
+    try {
+      const res = await fetch(`/api/generations/${generationId}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ editedHtml: newHtml }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setSaveState("saved");
+      onSaved?.(newHtml);
+    } catch {
+      setSaveState("dirty");
     }
-    return out;
   }
 
   const openCount = comments.filter((c) => !c.resolved).length;
 
   return (
     <div className="wc" onMouseUp={onMouseUp}>
-      <div className="wc-doc-pad">
-        <div className="wc-doc" ref={docRef}>
-          {segs.map((s, i) => {
-            const annotated = comments.some((c) => c.seg_index === i && !c.resolved);
-            const Tag = (["h1", "h2", "h3", "li", "a"].includes(s.tag) ? s.tag : "p") as keyof JSX.IntrinsicElements;
-            return (
-              <Tag
-                key={i}
-                data-seg={i}
-                className={"wc-seg " + s.tag + (annotated ? " annotated" : "")}
-                dangerouslySetInnerHTML={{ __html: segHtml(s.text, i) }}
-              />
-            );
-          })}
-          {segs.length === 0 && <p className="wc-seg p">Aucun texte à commenter.</p>}
+      <div className="wc-main">
+        <div className="wc-toolbar">
+          <span className="wc-tb-name"><i className="fa-solid fa-file-word" style={{ color: "#2B579A" }}></i> Document — copie</span>
+          {canEdit ? (
+            <>
+              <span className="wc-tb-state">
+                {saveState === "saving" ? "Sauvegarde…" : saveState === "saved" ? "Enregistré ✓" : saveState === "dirty" ? "Modifié" : "Éditable"}
+              </span>
+              <button className="btn btn-brand" style={{ padding: "7px 13px", fontSize: 13 }} onClick={saveDoc} disabled={saveState === "saving"}>
+                <i className="fa-solid fa-floppy-disk"></i> Enregistrer le texte
+              </button>
+            </>
+          ) : (
+            <span className="wc-tb-state"><i className="fa-solid fa-lock"></i> Lecture seule (rôle rédacteur requis pour éditer)</span>
+          )}
+        </div>
+        <div className="wc-doc-pad">
+          <div
+            className="wc-doc wc-editable"
+            ref={edRef}
+            contentEditable={canEdit}
+            suppressContentEditableWarning
+            spellCheck
+            onInput={() => setSaveState("dirty")}
+          />
         </div>
       </div>
 
       {pending && (
         <div className="wc-pop" style={{ left: pending.x, top: pending.y - 44, transform: "translateX(-50%)" }}>
-          <button
-            onMouseDown={(e) => {
-              e.preventDefault();
-              setComposing({ seg: pending.seg, quote: pending.quote });
-              setPending(null);
-            }}
-          >
+          <button onMouseDown={(e) => { e.preventDefault(); startComment(); }}>
             <i className="fa-solid fa-comment-medical"></i> Commenter
           </button>
         </div>
       )}
 
       <div className="wc-side">
-        <div className="wc-side-h">
-          <i className="fa-solid fa-comments"></i> Commentaires · {openCount} ouvert{openCount > 1 ? "s" : ""}
-        </div>
+        <div className="wc-side-h"><i className="fa-solid fa-comments"></i> Commentaires · {openCount} ouvert{openCount > 1 ? "s" : ""}</div>
         <div className="wc-comment-list">
           {comments.length === 0 && !composing && (
-            <div className="wc-empty">Sélectionnez un passage dans le texte pour le commenter — comme dans Word.</div>
+            <div className="wc-empty">Sélectionnez un passage → « Commenter » (comme dans Word). Le rédacteur peut aussi éditer le texte directement.</div>
           )}
           {comments.map((c) => (
             <div key={c.id} className={"wc-card" + (c.resolved ? " resolved" : "")}>
@@ -158,9 +201,7 @@ export default function WriterComments({
                   <i className={"fa-solid " + (c.resolved ? "fa-rotate-left" : "fa-check")}></i>
                 </button>
                 {c.user_id === currentUserId && (
-                  <button className="wc-mini" onClick={() => remove(c)} title="Supprimer">
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
+                  <button className="wc-mini" onClick={() => remove(c)} title="Supprimer"><i className="fa-solid fa-trash"></i></button>
                 )}
               </div>
             </div>
@@ -169,19 +210,10 @@ export default function WriterComments({
         {composing && (
           <div className="wc-composer">
             <div className="wc-q">« {composing.quote} »</div>
-            <textarea
-              autoFocus
-              placeholder="Votre commentaire…"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-            />
+            <textarea autoFocus placeholder="Votre commentaire…" value={draft} onChange={(e) => setDraft(e.target.value)} />
             <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-              <button className="btn btn-brand" onClick={save} disabled={!draft.trim()}>
-                Commenter
-              </button>
-              <button className="btn btn-ghost" onClick={() => { setComposing(null); setDraft(""); }}>
-                Annuler
-              </button>
+              <button className="btn btn-brand" onClick={saveComment} disabled={!draft.trim()}>Commenter</button>
+              <button className="btn btn-ghost" onClick={() => { setComposing(null); setDraft(""); }}>Annuler</button>
             </div>
           </div>
         )}

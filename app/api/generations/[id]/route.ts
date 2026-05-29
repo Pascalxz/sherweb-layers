@@ -40,10 +40,11 @@ export async function PATCH(
   if (!gen) return NextResponse.json({ error: "Génération introuvable." }, { status: 404 });
   const { data: roleRows } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
   const roles = new Set((roleRows ?? []).map((r) => r.role as string));
-  const canEdit = gen.user_id === user.id || roles.has("designer") || roles.has("coder") || roles.has("admin");
+  const canEdit =
+    gen.user_id === user.id || roles.has("designer") || roles.has("coder") || roles.has("writer") || roles.has("admin");
   if (!canEdit) {
     return NextResponse.json(
-      { error: "Permission refusée : édition réservée aux rôles designer / développeur." },
+      { error: "Permission refusée : édition réservée aux rôles rédacteur / designer / développeur." },
       { status: 403 },
     );
   }
