@@ -36,6 +36,10 @@ Pas un produit fini. Une démo crédible.
 5. **Multi-users = simple.** Un seul rôle. Tout le monde voit tout (historique partagé). NE PAS
    sur-investir dans les permissions/RBAC. L'effet « regarde l'activité de l'équipe » est plus
    convaincant qu'un système de rôles pour une démo.
+   > **Exception décidée le 2026-05-29 (autorisée explicitement par le demandeur)** : on ajoute
+   > finalement un **workflow de validation avec RBAC** (rôles writer / designer / coder / QA /
+   > demandeur + étapes Brouillon → Texte → Design → Code → QA → Validation → Corrections →
+   > Dev/Prod). C'est une divergence assumée du PRD ; voir `WORKFLOW.md` pour le modèle.
 
 6. **HTML structuré, pas du markup libre.** Quand la couche génère du HTML (email, landing, brief),
    elle ASSEMBLE des composants d'une librairie fixe (hero, CTA, bloc texte, carte produit). Jamais

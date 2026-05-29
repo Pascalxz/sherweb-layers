@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { outputMeta, type ModuleMeta } from "@/lib/layerData";
+import type { Role } from "@/lib/workflow";
 import type { GovRule, WSGen } from "./types";
 import Studio from "./Studio";
 import TeamActivity from "./TeamActivity";
 import Governance from "./Governance";
 import CanvasView from "./CanvasView";
+import Roles, { type TeamMember } from "./Roles";
 
-type View = "studio" | "governance" | "activity" | "canvas";
+type View = "studio" | "governance" | "activity" | "canvas" | "roles";
 
 function initials(email: string): string {
   const name = email.split("@")[0] || "";
@@ -23,12 +25,18 @@ export default function Workspace({
   governance,
   voice,
   modules,
+  myRoles,
+  users,
+  currentUserId,
 }: {
   initialGens: WSGen[];
   userEmail: string;
   governance: GovRule[];
   voice: { fr: string; en: string };
   modules: ModuleMeta[];
+  myRoles: Role[];
+  users: TeamMember[];
+  currentUserId: string;
 }) {
   const [view, setView] = useState<View>("studio");
   const [gens, setGens] = useState<WSGen[]>(initialGens);
@@ -48,6 +56,7 @@ export default function Workspace({
     { id: "studio", label: "Studio", icon: "fa-wand-magic" },
     { id: "governance", label: "La couche", icon: "fa-layer-group" },
     { id: "activity", label: "Activité de l'équipe", icon: "fa-users", count: gens.length },
+    { id: "roles", label: "Rôles & workflow", icon: "fa-user-shield" },
   ];
 
   const tbTitle =
@@ -57,7 +66,9 @@ export default function Workspace({
         ? "Activité de l'équipe"
         : view === "governance"
           ? "La couche"
-          : current?.title ?? "Canvas";
+          : view === "roles"
+            ? "Rôles & workflow"
+            : current?.title ?? "Canvas";
 
   return (
     <div className="sw-app-root">
@@ -112,7 +123,7 @@ export default function Workspace({
 
         <main className="main">
           {view === "canvas" && current ? (
-            <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} />
+            <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} myRoles={myRoles} />
           ) : (
             <div className="main-pad">
               {view === "studio" && (
@@ -126,6 +137,7 @@ export default function Workspace({
               )}
               {view === "activity" && <TeamActivity items={gens} onOpen={openCanvas} />}
               {view === "governance" && <Governance initialRules={governance} initialVoice={voice} initialModules={modules} />}
+              {view === "roles" && <Roles initialUsers={users} currentUserId={currentUserId} />}
             </div>
           )}
         </main>

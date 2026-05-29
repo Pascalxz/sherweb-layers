@@ -4,7 +4,9 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { renderDocument } from "@/lib/components/htmlLibrary";
 import { MODULES, GOVERNANCE, outputMeta, type ModuleMeta } from "@/lib/layerData";
+import { STATUS_BADGE, type Role } from "@/lib/workflow";
 import type { WSGen } from "./types";
+import WorkflowBar from "./WorkflowBar";
 
 // GrapesJS casse en SSR → import client-only (piège connu CLAUDE.md).
 const InlineEditor = dynamic(() => import("./InlineEditor"), {
@@ -23,12 +25,16 @@ export default function CanvasView({
   onClose,
   transparencyOpen = true,
   modules = MODULES,
+  myRoles = [],
 }: {
   gen: WSGen;
   onClose: () => void;
   transparencyOpen?: boolean;
   modules?: ModuleMeta[];
+  myRoles?: Role[];
 }) {
+  const canEdit =
+    gen.isOwner || myRoles.includes("designer") || myRoles.includes("coder") || myRoles.includes("admin");
   const [tab, setTab] = useState<Tab>("preview");
   const [sideOpen, setSideOpen] = useState(transparencyOpen);
   const [html, setHtml] = useState(gen.html);
@@ -51,6 +57,7 @@ export default function CanvasView({
             <span className="cv-tag onbrand">
               <i className="fa-solid fa-circle-check"></i> On-brand
             </span>
+            <span className="cv-tag status">{STATUS_BADGE[gen.status].label}</span>
             <span className="cv-tag">{gen.model}</span>
           </div>
         </div>
@@ -59,14 +66,18 @@ export default function CanvasView({
           <button className={"cv-tab" + (tab === "preview" ? " on" : "")} onClick={() => setTab("preview")}>
             <i className="fa-solid fa-eye"></i>Aperçu
           </button>
-          <button className={"cv-tab" + (tab === "edit" ? " on" : "")} onClick={() => setTab("edit")}>
-            <i className="fa-solid fa-pen-ruler"></i>Édition visuelle
-          </button>
+          {canEdit && (
+            <button className={"cv-tab" + (tab === "edit" ? " on" : "")} onClick={() => setTab("edit")}>
+              <i className="fa-solid fa-pen-ruler"></i>Édition visuelle
+            </button>
+          )}
           <button className={"cv-tab" + (tab === "code" ? " on" : "")} onClick={() => setTab("code")}>
             <i className="fa-solid fa-code"></i>Code
           </button>
         </div>
       </div>
+
+      <WorkflowBar generationId={gen.id} initialStatus={gen.status} myRoles={myRoles} isOwner={gen.isOwner} />
 
       <div className="cv-body">
         <div className="cv-stage">

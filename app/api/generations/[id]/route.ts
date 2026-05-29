@@ -35,6 +35,19 @@ export async function PATCH(
     return NextResponse.json({ error: "editedHtml manquant." }, { status: 400 });
   }
 
+  // RBAC : éditer le contenu requiert designer/coder/admin (ou être le propriétaire).
+  const { data: gen } = await supabase.from("generations").select("user_id").eq("id", params.id).single();
+  if (!gen) return NextResponse.json({ error: "Génération introuvable." }, { status: 404 });
+  const { data: roleRows } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+  const roles = new Set((roleRows ?? []).map((r) => r.role as string));
+  const canEdit = gen.user_id === user.id || roles.has("designer") || roles.has("coder") || roles.has("admin");
+  if (!canEdit) {
+    return NextResponse.json(
+      { error: "Permission refusée : édition réservée aux rôles designer / développeur." },
+      { status: 403 },
+    );
+  }
+
   const { data: updated, error } = await supabase
     .from("generations")
     .update({ edited_html: editedHtml, updated_at: new Date().toISOString() })
@@ -45,10 +58,7 @@ export async function PATCH(
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
   if (!updated || updated.length === 0) {
-    return NextResponse.json(
-      { error: "Génération introuvable ou non modifiable (vous n'en êtes pas l'auteur)." },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: "Génération introuvable." }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true, id: params.id });

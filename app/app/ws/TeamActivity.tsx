@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { OUTPUT_TYPES, ENGINES, outputMeta, engineMeta } from "@/lib/layerData";
+import { STATUS_BADGE } from "@/lib/workflow";
 import type { WSGen } from "./types";
 
 export default function TeamActivity({
@@ -103,6 +104,7 @@ export default function TeamActivity({
                     {em?.label ?? g.engine}
                   </span>
                   <span className="fr-model">{g.model}</span>
+                  <span className="fr-status">{STATUS_BADGE[g.status].label}</span>
                 </div>
               </div>
               <div className="fr-right">

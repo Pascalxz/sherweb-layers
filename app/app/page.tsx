@@ -2,6 +2,8 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { outputMeta, MODULES, type ModuleMeta } from "@/lib/layerData";
 import type { Engine, GenerationMetadata, Lang, OutputType } from "@/lib/types";
 import Workspace from "./ws/Workspace";
+import type { TeamMember } from "./ws/Roles";
+import type { Role, Status } from "@/lib/workflow";
 import type { GovCategory, GovRule, WSGen } from "./ws/types";
 import { makeTitle, timeAgo } from "./ws/types";
 
@@ -18,6 +20,7 @@ interface GenerationRow {
   model: string;
   metadata: GenerationMetadata | null;
   created_at: string;
+  status: string;
 }
 
 function displayName(email: string): string {
@@ -34,7 +37,7 @@ export default async function AppHome() {
 
   const { data: rows } = await supabase
     .from("generations")
-    .select("id, user_id, output_type, lang, prompt, output_html, edited_html, model, metadata, created_at")
+    .select("id, user_id, output_type, lang, prompt, output_html, edited_html, model, metadata, created_at, status")
     .order("created_at", { ascending: false })
     .limit(30);
   const generations = (rows ?? []) as GenerationRow[];
@@ -65,6 +68,8 @@ export default async function AppHome() {
       ago: timeAgo(g.created_at),
       source: "live",
       systemPrompt: g.metadata?.systemPrompt,
+      status: (g.status ?? "draft") as Status,
+      isOwner: g.user_id === user?.id,
     };
   });
 
@@ -91,6 +96,23 @@ export default async function AppHome() {
   const cm = brandRow?.context_modules as ModuleMeta[] | null | undefined;
   const modules = cm && cm.length > 0 ? cm : MODULES;
 
+  // RBAC : rôles de l'utilisateur courant + équipe (profils + rôles) pour la vue Rôles.
+  const { data: allRoles } = await supabase.from("user_roles").select("user_id, role");
+  const rolesByUser = new Map<string, Role[]>();
+  for (const r of allRoles ?? []) {
+    const arr = rolesByUser.get(r.user_id as string) ?? [];
+    arr.push(r.role as Role);
+    rolesByUser.set(r.user_id as string, arr);
+  }
+  const myRoles = rolesByUser.get(user?.id ?? "") ?? [];
+
+  const { data: allProfiles } = await supabase.from("profiles").select("id, email").order("created_at", { ascending: true });
+  const users: TeamMember[] = (allProfiles ?? []).map((p) => ({
+    id: p.id as string,
+    email: p.email as string,
+    roles: rolesByUser.get(p.id as string) ?? [],
+  }));
+
   return (
     <Workspace
       initialGens={initialGens}
@@ -98,6 +120,9 @@ export default async function AppHome() {
       governance={governance}
       voice={voice}
       modules={modules}
+      myRoles={myRoles}
+      users={users}
+      currentUserId={user?.id ?? ""}
     />
   );
 }

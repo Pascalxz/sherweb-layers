@@ -114,6 +114,8 @@ export default function Studio({
       ago: "à l'instant",
       source: "live",
       systemPrompt: result.systemPrompt,
+      status: "draft",
+      isOwner: true,
     };
     setTimeout(() => onComplete(gen), 750);
   }

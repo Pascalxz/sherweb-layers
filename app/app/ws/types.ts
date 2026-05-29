@@ -1,4 +1,5 @@
 import type { Engine, Lang, OutputType } from "@/lib/types";
+import type { Status } from "@/lib/workflow";
 
 export type GovCategory = "legal" | "brand" | "compliance";
 export interface GovRule {
@@ -24,6 +25,8 @@ export interface WSGen {
   ago: string;
   source: "live" | "seed";
   systemPrompt?: string;
+  status: Status;
+  isOwner: boolean;
 }
 
 export function makeTitle(prompt: string, typeFr: string): string {
