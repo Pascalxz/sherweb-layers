@@ -265,3 +265,18 @@
 .wc-editable{outline:none}
 .wc-editable:focus{outline:none}
 .wc-hl{background:#FFE89A;border-radius:2px;padding:0 1px;box-shadow:0 0 0 1px #F5D76E}
+
+/* Track changes */
+.wc-track-toggle{border:1px solid var(--color-border);background:var(--sw-white);border-radius:8px;padding:6px 11px;font-size:12px;
+  font-weight:600;color:var(--sw-ink-500);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all var(--dur)}
+.wc-track-toggle.on{background:#FDEDE9;color:var(--sw-red-700);border-color:transparent}
+.wc-track-toggle i{font-size:14px}
+.wc-changes{border-bottom:1px solid var(--color-border);padding:14px 16px;background:#FFF9F8}
+.wc-change{border:1px solid var(--color-border);border-radius:10px;padding:10px 12px;margin-top:10px;background:var(--sw-white)}
+.wc-diff{font-size:13px;line-height:1.5;color:var(--sw-ink-700)}
+.wc-diff del{color:var(--sw-red-700);text-decoration:line-through;background:#FDEDE9}
+.wc-diff ins{color:#1F8A5B;text-decoration:none;background:#E7F4EC}
+.wc-accept{color:#1F8A5B}
+.wc-accept:hover{color:#13633f}
+.wc-reject{color:var(--sw-red-600)}
+.wc-reject:hover{color:var(--sw-red-700)}

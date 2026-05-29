@@ -37,7 +37,10 @@ export default function WriterComments({
   const [pending, setPending] = useState<{ seg: number; quote: string; x: number; y: number } | null>(null);
   const [composing, setComposing] = useState<{ seg: number; quote: string } | null>(null);
   const [draft, setDraft] = useState("");
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "dirty">("idle");
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "dirty" | "proposed">("idle");
+  const origTextsRef = useRef<string[]>([]);
+  const [track, setTrack] = useState(false);
+  const [changes, setChanges] = useState<TrackChange[]>([]);
 
   // Initialise le document éditable UNE fois (sinon le curseur saute).
   useEffect(() => {
@@ -46,6 +49,8 @@ export default function WriterComments({
     const els = Array.from(doc.querySelectorAll("h1,h2,h3,p,li,a"));
     origDocRef.current = doc;
     origElsRef.current = els;
+    origTextsRef.current = els.map((el) => (el.textContent ?? "").trim());
+    loadChanges();
     // Charge les commentaires puis construit le HTML éditable avec surlignage best-effort.
     (async () => {
       let loaded: Comment[] = [];
@@ -123,6 +128,55 @@ export default function WriterComments({
     await fetch(`/api/comments/${c.id}`, { method: "DELETE" });
   }
 
+  // ── Track changes ──
+  async function loadChanges() {
+    const res = await fetch(`/api/changes?generationId=${generationId}`);
+    if (res.ok) setChanges((await res.json()).changes ?? []);
+  }
+  // Calcule les diffs par segment (texte courant vs original) et les propose.
+  async function propose() {
+    const ed = edRef.current;
+    if (!ed) return;
+    const edits: { segIndex: number; original: string; proposed: string }[] = [];
+    ed.querySelectorAll("[data-seg]").forEach((node) => {
+      const i = Number((node as HTMLElement).dataset.seg);
+      const proposed = (node.textContent ?? "").trim();
+      const original = origTextsRef.current[i] ?? "";
+      if (proposed !== original) edits.push({ segIndex: i, original, proposed });
+    });
+    if (edits.length === 0) {
+      setSaveState("idle");
+      return;
+    }
+    setSaveState("saving");
+    const res = await fetch("/api/changes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ generationId, edits }),
+    });
+    if (res.ok) {
+      setSaveState("proposed");
+      await loadChanges();
+    } else {
+      setSaveState("dirty");
+    }
+  }
+  async function resolveChange(c: TrackChange, action: "accept" | "reject") {
+    setChanges((cs) => cs.map((x) => (x.id === c.id ? { ...x, status: action === "accept" ? "accepted" : "rejected" } : x)));
+    const res = await fetch(`/api/changes/${c.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action }),
+    });
+    if (res.ok && action === "accept") {
+      // recharge le HTML appliqué : on met à jour l'original visible
+      origTextsRef.current[c.seg_index] = c.proposed;
+      const node = edRef.current?.querySelector(`[data-seg="${c.seg_index}"]`);
+      if (node) node.textContent = c.proposed;
+      onSaved?.(""); // signale au parent qu'il faudra recharger (no-op si vide)
+    }
+  }
+
   // Sauvegarde du TEXTE édité → réinjecte dans le HTML d'origine → PATCH.
   async function saveDoc() {
     const doc = origDocRef.current, els = origElsRef.current, ed = edRef.current;
@@ -146,6 +200,19 @@ export default function WriterComments({
   }
 
   const openCount = comments.filter((c) => !c.resolved).length;
+  const pendingChanges = changes.filter((c) => c.status === "pending");
+
+  function renderDiff(original: string, proposed: string): string {
+    return wordDiff(original, proposed)
+      .map((op) =>
+        op.type === "eq"
+          ? escapeHtml(op.text)
+          : op.type === "del"
+            ? `<del>${escapeHtml(op.text)}</del>`
+            : `<ins>${escapeHtml(op.text)}</ins>`,
+      )
+      .join("");
+  }
 
   return (
     <div className="wc" onMouseUp={onMouseUp}>
@@ -154,12 +221,35 @@ export default function WriterComments({
           <span className="wc-tb-name"><i className="fa-solid fa-file-word" style={{ color: "#2B579A" }}></i> Document — copie</span>
           {canEdit ? (
             <>
-              <span className="wc-tb-state">
-                {saveState === "saving" ? "Sauvegarde…" : saveState === "saved" ? "Enregistré ✓" : saveState === "dirty" ? "Modifié" : "Éditable"}
-              </span>
-              <button className="btn btn-brand" style={{ padding: "7px 13px", fontSize: 13 }} onClick={saveDoc} disabled={saveState === "saving"}>
-                <i className="fa-solid fa-floppy-disk"></i> Enregistrer le texte
+              <button
+                className={"wc-track-toggle" + (track ? " on" : "")}
+                onClick={() => setTrack((v) => !v)}
+                title="Suivi des modifications"
+              >
+                <i className={"fa-solid " + (track ? "fa-toggle-on" : "fa-toggle-off")}></i> Suivi des modifications
               </button>
+              <span className="wc-tb-state">
+                {saveState === "saving"
+                  ? "Envoi…"
+                  : saveState === "saved"
+                    ? "Enregistré ✓"
+                    : saveState === "proposed"
+                      ? "Modifications proposées ✓"
+                      : saveState === "dirty"
+                        ? "Modifié"
+                        : track
+                          ? "Mode suggestion"
+                          : "Éditable"}
+              </span>
+              {track ? (
+                <button className="btn btn-brand" style={{ padding: "7px 13px", fontSize: 13 }} onClick={propose} disabled={saveState === "saving"}>
+                  <i className="fa-solid fa-code-compare"></i> Proposer les modifications
+                </button>
+              ) : (
+                <button className="btn btn-brand" style={{ padding: "7px 13px", fontSize: 13 }} onClick={saveDoc} disabled={saveState === "saving"}>
+                  <i className="fa-solid fa-floppy-disk"></i> Enregistrer le texte
+                </button>
+              )}
             </>
           ) : (
             <span className="wc-tb-state"><i className="fa-solid fa-lock"></i> Lecture seule (rôle rédacteur requis pour éditer)</span>
@@ -186,6 +276,29 @@ export default function WriterComments({
       )}
 
       <div className="wc-side">
+        {pendingChanges.length > 0 && (
+          <div className="wc-changes">
+            <div className="wc-side-h"><i className="fa-solid fa-code-compare" style={{ color: "var(--sw-red-600)" }}></i> Modifications suivies · {pendingChanges.length}</div>
+            {pendingChanges.map((c) => (
+              <div key={c.id} className="wc-change">
+                <div className="wc-diff" dangerouslySetInnerHTML={{ __html: renderDiff(c.original, c.proposed) }} />
+                <div className="wc-foot">
+                  <span className="wc-who">{c.email}</span>
+                  {canEdit && (
+                    <>
+                      <button className="wc-mini wc-accept" onClick={() => resolveChange(c, "accept")} title="Accepter">
+                        <i className="fa-solid fa-check"></i>
+                      </button>
+                      <button className="wc-mini wc-reject" onClick={() => resolveChange(c, "reject")} title="Refuser">
+                        <i className="fa-solid fa-xmark"></i>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="wc-side-h"><i className="fa-solid fa-comments"></i> Commentaires · {openCount} ouvert{openCount > 1 ? "s" : ""}</div>
         <div className="wc-comment-list">
           {comments.length === 0 && !composing && (
