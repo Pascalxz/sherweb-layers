@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { renderDocument } from "@/lib/components/htmlLibrary";
 import { MODULES, GOVERNANCE, outputMeta, type ModuleMeta } from "@/lib/layerData";
 import { STATUS_BADGE, type Role } from "@/lib/workflow";
 import type { WSGen } from "./types";
 import WorkflowBar from "./WorkflowBar";
 import WriterComments from "./WriterComments";
+import ReviewPanel from "./ReviewPanel";
 
-// GrapesJS casse en SSR → import client-only (piège connu CLAUDE.md).
 const InlineEditor = dynamic(() => import("./InlineEditor"), {
   ssr: false,
   loading: () => (
@@ -19,7 +20,15 @@ const InlineEditor = dynamic(() => import("./InlineEditor"), {
   ),
 });
 
-type Tab = "comments" | "preview" | "edit" | "code";
+// Onglets orientés rôle (pipeline de production).
+type Tab = "writer" | "design" | "code" | "qa" | "deliver";
+const TABS: { id: Tab; label: string; icon: string; role: Role | null }[] = [
+  { id: "writer", label: "Rédacteur", icon: "fa-pen-nib", role: "writer" },
+  { id: "design", label: "Designer", icon: "fa-pen-ruler", role: "designer" },
+  { id: "code", label: "Intégrateur", icon: "fa-code", role: "coder" },
+  { id: "qa", label: "QA", icon: "fa-clipboard-check", role: "qa" },
+  { id: "deliver", label: "Livraison", icon: "fa-rocket", role: "requester" },
+];
 
 export default function CanvasView({
   gen,
@@ -36,11 +45,16 @@ export default function CanvasView({
   myRoles?: Role[];
   currentUserId?: string;
 }) {
-  const canEdit =
-    gen.isOwner || myRoles.includes("designer") || myRoles.includes("coder") || myRoles.includes("admin");
-  const [tab, setTab] = useState<Tab>("preview");
+  const [tab, setTab] = useState<Tab>("writer");
   const [sideOpen, setSideOpen] = useState(transparencyOpen);
   const [html, setHtml] = useState(gen.html);
+  const [designMode, setDesignMode] = useState(false); // false = aperçu, true = GrapesJS
+
+  const has = (r: Role) => myRoles.includes(r) || myRoles.includes("admin");
+  const isOwner = gen.isOwner;
+  const canWriter = isOwner || has("writer");
+  const canDesign = isOwner || has("designer");
+  const canCode = isOwner || has("coder");
 
   return (
     <div className="canvas-wrap">
@@ -57,54 +71,75 @@ export default function CanvasView({
             </span>
             <span className="cv-tag">{outputMeta(gen.type)?.fr ?? gen.type}</span>
             <span className="cv-tag">{gen.lang.toUpperCase()}</span>
-            <span className="cv-tag onbrand">
-              <i className="fa-solid fa-circle-check"></i> On-brand
-            </span>
             <span className="cv-tag status">{STATUS_BADGE[gen.status].label}</span>
             <span className="cv-tag">{gen.model}</span>
           </div>
         </div>
 
-        <div className="cv-tabs">
-          <button className={"cv-tab" + (tab === "comments" ? " on" : "")} onClick={() => setTab("comments")}>
-            <i className="fa-solid fa-comments"></i>Texte
-          </button>
-          <button className={"cv-tab" + (tab === "preview" ? " on" : "")} onClick={() => setTab("preview")}>
-            <i className="fa-solid fa-eye"></i>Aperçu
-          </button>
-          {canEdit && (
-            <button className={"cv-tab" + (tab === "edit" ? " on" : "")} onClick={() => setTab("edit")}>
-              <i className="fa-solid fa-pen-ruler"></i>Édition visuelle
+        <div className="cv-tabs cv-role-tabs">
+          {TABS.map((t) => (
+            <button key={t.id} className={"cv-tab" + (tab === t.id ? " on" : "")} onClick={() => setTab(t.id)}>
+              <i className={"fa-solid " + t.icon}></i>
+              {t.label}
             </button>
-          )}
-          <button className={"cv-tab" + (tab === "code" ? " on" : "")} onClick={() => setTab("code")}>
-            <i className="fa-solid fa-code"></i>Code
-          </button>
+          ))}
         </div>
       </div>
 
-      <WorkflowBar generationId={gen.id} initialStatus={gen.status} myRoles={myRoles} isOwner={gen.isOwner} />
+      <WorkflowBar generationId={gen.id} initialStatus={gen.status} myRoles={myRoles} isOwner={isOwner} />
 
       <div className="cv-body">
         <div className="cv-stage">
-          {tab === "comments" && (
+          {tab === "writer" && (
             <WriterComments
               generationId={gen.id}
               html={html}
               currentUserId={currentUserId}
-              canEdit={canEdit || myRoles.includes("writer")}
+              canEdit={canWriter}
               onSaved={(h) => setHtml(h)}
             />
           )}
-          {tab === "preview" && (
-            <div className="cv-frame-pad">
-              <iframe className="cv-frame" title="preview" srcDoc={renderDocument(html)} />
-            </div>
+
+          {tab === "design" &&
+            (designMode && canDesign ? (
+              <div style={{ display: "flex", flexDirection: "column", width: "100%", minWidth: 0 }}>
+                <div className="wc-toolbar">
+                  <span className="wc-tb-name">
+                    <i className="fa-solid fa-pen-ruler" style={{ color: "var(--sw-blue-700)" }}></i> Édition design
+                  </span>
+                  <button className="btn btn-ghost" style={{ marginLeft: "auto", padding: "7px 13px", fontSize: 13 }} onClick={() => setDesignMode(false)}>
+                    <i className="fa-solid fa-eye"></i> Revenir à l&apos;aperçu
+                  </button>
+                </div>
+                <InlineEditor generationId={gen.id} initialHtml={html} onSaved={(h) => setHtml(h)} />
+              </div>
+            ) : (
+              <ReviewPanel
+                generationId={gen.id}
+                html={html}
+                currentUserId={currentUserId}
+                kind="design"
+                canEdit={canDesign}
+                onEditDesign={() => setDesignMode(true)}
+              />
+            ))}
+
+          {tab === "code" && (
+            <ReviewPanel
+              generationId={gen.id}
+              html={html}
+              currentUserId={currentUserId}
+              kind="code"
+              canEdit={canCode}
+              onSavedCode={(h) => setHtml(h)}
+            />
           )}
-          {tab === "edit" && (
-            <InlineEditor generationId={gen.id} initialHtml={html} onSaved={(h) => setHtml(h)} />
+
+          {tab === "qa" && (
+            <ReviewPanel generationId={gen.id} html={html} currentUserId={currentUserId} kind="qa" canEdit={true} />
           )}
-          {tab === "code" && <textarea className="cv-code" readOnly value={html} />}
+
+          {tab === "deliver" && <DeliverPanel gen={gen} html={html} />}
         </div>
 
         <div className={"cv-side" + (sideOpen ? "" : " collapsed")}>
@@ -117,10 +152,8 @@ export default function CanvasView({
                 <i className="fa-solid fa-layer-group"></i>Ce que la couche a injecté
               </div>
               <p className="cv-side-lead">
-                Tout ceci a été ajouté automatiquement au prompt — c&apos;est ce qui rend l&apos;output on-brand,
-                peu importe le moteur.
+                Tout ceci a été ajouté automatiquement au prompt — c&apos;est ce qui rend l&apos;output on-brand.
               </p>
-
               <div className="cv-side-sec">
                 <div className="cv-side-label">Modules de contexte · {modules.length}</div>
                 <div className="cv-mods">
@@ -132,13 +165,10 @@ export default function CanvasView({
                   ))}
                 </div>
               </div>
-
               <div className="cv-side-sec">
                 <div className="cv-side-label">Connaissance injectée (RAG) · {gen.ragChunkTitles.length}</div>
                 {gen.ragChunkTitles.length === 0 && (
-                  <span style={{ fontSize: 12, color: "var(--sw-slate-400)" }}>
-                    Aucun chunk pertinent — marque + gouvernance suffisent.
-                  </span>
+                  <span style={{ fontSize: 12, color: "var(--sw-slate-400)" }}>Aucun chunk pertinent.</span>
                 )}
                 {gen.ragChunkTitles.map((t, i) => (
                   <div key={i} className="cv-chunk">
@@ -146,7 +176,6 @@ export default function CanvasView({
                   </div>
                 ))}
               </div>
-
               <div className="cv-side-sec">
                 <div className="cv-side-label">Règles de gouvernance · {GOVERNANCE.length}</div>
                 {GOVERNANCE.map((g) => (
@@ -156,13 +185,12 @@ export default function CanvasView({
                   </div>
                 ))}
               </div>
-
               {gen.systemPrompt && (
                 <div className="cv-side-sec" style={{ borderBottom: 0 }}>
                   <div className="cv-side-label">System prompt envoyé au moteur</div>
                   <details className="cv-prompt">
                     <summary>
-                      <i className="fa-solid fa-terminal"></i> Voir le prompt complet ({gen.systemPrompt.length.toLocaleString("fr")} car.)
+                      <i className="fa-solid fa-terminal"></i> Voir le prompt complet
                     </summary>
                     <pre>{gen.systemPrompt}</pre>
                   </details>
@@ -170,6 +198,52 @@ export default function CanvasView({
               )}
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DeliverPanel({ gen, html }: { gen: WSGen; html: string }) {
+  const published = gen.status === "published";
+  function downloadHtml() {
+    const blob = new Blob([renderDocument(html)], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${gen.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  return (
+    <div className="cv-frame-pad" style={{ display: "flex", justifyContent: "center" }}>
+      <div className="deliver-card">
+        <div className={"deliver-state " + (published ? "ok" : "wait")}>
+          <i className={"fa-solid " + (published ? "fa-circle-check" : "fa-hourglass-half")}></i>
+          {published ? "Publié en production" : "En attente de validation"}
+        </div>
+        <h2>Livraison</h2>
+        <p>
+          {published
+            ? "Ce contenu a passé tout le pipeline (rédaction → design → code → QA → validation) et est marqué publié."
+            : "Une fois la validation du demandeur obtenue, l'étape « Envoyer en prod » de la barre de workflow ci-dessus marque la livraison."}
+        </p>
+        <div className="deliver-steps">
+          {["Rédaction", "Design", "Code", "QA", "Validation", "Prod"].map((s, i) => (
+            <span key={s} className="deliver-step">
+              <i className="fa-solid fa-check"></i>
+              {s}
+              {i < 5 && <span className="deliver-arrow">→</span>}
+            </span>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap" }}>
+          <button className="btn btn-brand" onClick={downloadHtml}>
+            <i className="fa-solid fa-download"></i> Exporter le HTML
+          </button>
+          <Link href={`/app/canvas/${gen.id}`} className="btn btn-ghost">
+            <i className="fa-solid fa-up-right-from-square"></i> Ouvrir en plein écran
+          </Link>
         </div>
       </div>
     </div>
