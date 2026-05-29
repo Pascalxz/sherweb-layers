@@ -179,11 +179,10 @@ export default function WriterComments({
       body: JSON.stringify({ action }),
     });
     if (res.ok && action === "accept") {
-      // recharge le HTML appliqué : on met à jour l'original visible
+      // Le serveur a appliqué le texte au edited_html ; on reflète localement le segment.
       origTextsRef.current[c.seg_index] = c.proposed;
       const node = edRef.current?.querySelector(`[data-seg="${c.seg_index}"]`);
       if (node) node.textContent = c.proposed;
-      onSaved?.(""); // signale au parent qu'il faudra recharger (no-op si vide)
     }
   }
 
