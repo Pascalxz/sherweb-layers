@@ -22,7 +22,7 @@ import type {
 
 export const runtime = "nodejs";
 
-const OUTPUT_TYPES: OutputType[] = ["email", "brief"];
+const OUTPUT_TYPES: OutputType[] = ["email", "brief", "landing_page"];
 const LANGS: Lang[] = ["en", "fr"];
 const ENGINES: Engine[] = ["claude", "openai"];
 

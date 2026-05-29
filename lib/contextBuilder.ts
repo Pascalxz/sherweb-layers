@@ -41,6 +41,10 @@ const OUTPUT_BRIEFS: Record<OutputType, string> = {
     "Tu produis un BRIEF (one-pager) destiné à un partenaire MSP. Structure attendue : hero, plusieurs text-block " +
     "structurés (contexte, valeur, preuves), un product-card-grid pour les piliers/features, un proof-points, " +
     "et un cta-block. Plus dense et informatif qu'un email, mais toujours scannable.",
+  landing_page:
+    "Tu produis une LANDING PAGE / microsite marketing. Structure riche : hero accrocheur, plusieurs text-block, " +
+    "un product-card-grid (2–3 cartes), un proof-points, éventuellement un vendor-strip, et un cta-block de clôture. " +
+    "Pensée pour convertir : bénéfice d'abord, scannable, double CTA.",
 };
 
 const LANG_INSTRUCTIONS: Record<Lang, string> = {

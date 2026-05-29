@@ -3,8 +3,8 @@
 
 export type Lang = "en" | "fr";
 
-// Les deux outputs ciblés pour la démo (CLAUDE.md §2 : couper la largeur).
-export type OutputType = "email" | "brief";
+// Outputs ciblés pour la démo (CLAUDE.md §2). landing_page = microsite (output « wow » du design).
+export type OutputType = "email" | "brief" | "landing_page";
 
 // Moteur IA. Claude est principal ; OpenAI démontre le multi-engine.
 export type Engine = "claude" | "openai";

@@ -1,0 +1,71 @@
+/* =====================================================================
+   Sherweb design tokens — repris de design-system/colors_and_type.css
+   (@font-face FA Pro retirés : licence. Montserrat + FA Free via CDN.)
+   ===================================================================== */
+:root {
+  /* Brand core */
+  --sw-blue-950: #072A4A; --sw-blue-900: #0A4270; --sw-blue-700: #0061AA;
+  --sw-blue-600: #0A96ED; --sw-blue-500: #34AFFC; --sw-blue-400: #76B8EA;
+  --sw-blue-300: #7BCAFE; --sw-blue-200: #A0E3FF; --sw-blue-150: #BCE2FF;
+  --sw-blue-100: #DFF0FF; --sw-blue-050: #CBF0FF;
+  --sw-red-700: #B93624; --sw-red-600: #DB4227; --sw-red-500: #ED573C;
+
+  /* Neutrals */
+  --sw-black: #000; --sw-ink-900: #090A0C; --sw-ink-800: #1F2A37; --sw-ink-700: #2F2D2E;
+  --sw-ink-600: #363B43; --sw-ink-500: #4E5B6C; --sw-ink-400: #676D75; --sw-ink-300: #6B7280;
+  --sw-slate-500: #76889A; --sw-slate-400: #A3B0BD; --sw-slate-300: #C9D1D8;
+  --sw-slate-200: #E2E7EB; --sw-slate-150: #E5E7EB; --sw-slate-100: #F4F6F7; --sw-white: #FFF;
+
+  /* Semantic */
+  --color-bg: var(--sw-white); --color-bg-muted: var(--sw-slate-100); --color-bg-tint: var(--sw-blue-100);
+  --color-bg-inverse: var(--sw-blue-950); --color-surface: var(--sw-white); --color-surface-alt: var(--sw-slate-100);
+  --color-fg: var(--sw-ink-900); --color-fg-muted: var(--sw-slate-500); --color-fg-subtle: var(--sw-slate-400);
+  --color-fg-inverse: var(--sw-white);
+  --color-brand: var(--sw-blue-700); --color-brand-hover: var(--sw-blue-600);
+  --color-accent: var(--sw-red-600); --color-accent-hover: var(--sw-red-700);
+  --color-border: var(--sw-slate-150); --color-border-strong: var(--sw-slate-300); --color-focus-ring: var(--sw-blue-500);
+
+  /* Gradients */
+  --sw-grad-ocean: linear-gradient(180deg,#0A4270 0%,#072A4A 100%);
+  --sw-grad-sky: linear-gradient(180deg,#DFF0FF 0%,#FFF 100%);
+  --sw-grad-blue-linear: linear-gradient(180deg,#34AFFC 0%,#0061AA 100%);
+
+  /* Font families */
+  --ff-sans: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ff-display: var(--ff-sans);
+  --ff-mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+
+  /* Type scale */
+  --fs-display-lg: 64px; --lh-display-lg: 72px; --ls-display-lg: -1.5px;
+  --fs-display-md: 48px; --lh-display-md: 56px; --ls-display-md: -1px;
+  --fs-display-sm: 36px; --lh-display-sm: 48px; --ls-display-sm: -0.75px;
+  --fs-headline-lg: 32px; --lh-headline-lg: 40px; --ls-headline-lg: -0.5px;
+  --fs-headline-md: 24px; --lh-headline-md: 32px; --ls-headline-md: -0.25px;
+  --fs-headline-rg: 20px; --lh-headline-rg: 24px; --ls-headline-rg: -0.25px;
+  --fs-headline-sm: 18px; --lh-headline-sm: 24px; --ls-headline-sm: 0;
+  --fs-body-lg: 16px; --lh-body-lg: 24px; --ls-body-lg: 0.25px;
+  --fs-body-md: 14px; --lh-body-md: 20px; --ls-body-md: 0.25px;
+  --fs-body-sm: 12px; --lh-body-sm: 16px; --ls-body-sm: 0.25px;
+  --fs-btn-xs: 12px; --fs-btn-sm: 14px; --fs-btn-md: 16px; --fs-btn-lg: 20px;
+
+  /* Radii */
+  --radius-xs: 2px; --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px;
+  --radius-2xl: 16px; --radius-3xl: 24px; --radius-4xl: 40px; --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.08);
+  --shadow: 0 1px 3px 0 rgba(0,0,0,0.10), 0 1px 2px -1px rgba(0,0,0,0.10);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.10);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.10);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+
+  /* Spacing (8pt) */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --space-20: 80px; --space-24: 96px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2,.7,.2,1); --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --dur-fast: 150ms; --dur: 220ms; --dur-slow: 320ms;
+}

@@ -1,7 +1,9 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import Generator from "./Generator";
-import HistoryList, { type HistoryEntry } from "./HistoryList";
-import type { GenerationMetadata } from "@/lib/types";
+import { outputMeta } from "@/lib/layerData";
+import type { Engine, GenerationMetadata, Lang, OutputType } from "@/lib/types";
+import Workspace from "./ws/Workspace";
+import type { WSGen } from "./ws/types";
+import { makeTitle, timeAgo } from "./ws/types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,61 +20,52 @@ interface GenerationRow {
   created_at: string;
 }
 
+function displayName(email: string): string {
+  const n = (email.split("@")[0] || "").split(/[.\-_]/);
+  return n[0] ? n[0][0].toUpperCase() + n[0].slice(1) + (n[1] ? " " + n[1][0].toUpperCase() + "." : "") : email;
+}
+
 export default async function AppHome() {
   const supabase = createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const userEmail = user?.email ?? "ppotvin@sherweb.com";
 
-  // Historique partagé : tout le monde voit tout (CLAUDE.md §5).
   const { data: rows } = await supabase
     .from("generations")
     .select("id, user_id, output_type, lang, prompt, output_html, edited_html, model, metadata, created_at")
     .order("created_at", { ascending: false })
-    .limit(25);
-
+    .limit(30);
   const generations = (rows ?? []) as GenerationRow[];
 
-  // Résolution des emails auteurs (profiles) pour l'effet "activité de l'équipe".
+  // Emails auteurs pour l'effet « activité de l'équipe ».
   const authorIds = [...new Set(generations.map((g) => g.user_id))];
   const emailById = new Map<string, string>();
   if (authorIds.length > 0) {
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, email")
-      .in("id", authorIds);
+    const { data: profiles } = await supabase.from("profiles").select("id, email").in("id", authorIds);
     for (const p of profiles ?? []) emailById.set(p.id as string, p.email as string);
   }
 
-  const entries: HistoryEntry[] = generations.map((g) => ({
-    id: g.id,
-    output_type: g.output_type,
-    lang: g.lang,
-    prompt: g.prompt,
-    html: g.edited_html ?? g.output_html,
-    model: g.model,
-    engine: g.metadata?.engine ?? null,
-    authorEmail: emailById.get(g.user_id) ?? null,
-    createdAt: g.created_at,
-  }));
+  const initialGens: WSGen[] = generations.map((g) => {
+    const type = g.output_type as OutputType;
+    const email = emailById.get(g.user_id) ?? "—";
+    return {
+      id: g.id,
+      title: makeTitle(g.prompt, outputMeta(type)?.fr ?? type),
+      type,
+      lang: g.lang as Lang,
+      engine: (g.metadata?.engine ?? "claude") as Engine,
+      model: g.model,
+      prompt: g.prompt,
+      html: g.edited_html ?? g.output_html,
+      ragChunkTitles: g.metadata?.ragChunkTitles ?? [],
+      who: email === userEmail ? "Vous" : displayName(email),
+      user: email,
+      ago: timeAgo(g.created_at),
+      source: "live",
+    };
+  });
 
-  return (
-    <main className="min-h-screen px-6 py-12 max-w-4xl mx-auto space-y-12">
-      <header className="space-y-1">
-        <p className="text-sm uppercase tracking-button text-sherweb-muted">Sherweb Layer</p>
-        <h1 className="text-3xl">Studio</h1>
-        <p className="text-sherweb-body">
-          {user?.email ? `Connecté en tant que ${user.email}. ` : ""}
-          Chaque génération passe par la couche de marque (tone of voice + design tokens + gouvernance + RAG).
-        </p>
-      </header>
-
-      <Generator />
-
-      <section className="space-y-4">
-        <h2 className="text-xl">Activité de l'équipe</h2>
-        <HistoryList entries={entries} />
-      </section>
-    </main>
-  );
+  return <Workspace initialGens={initialGens} userEmail={userEmail} />;
 }
