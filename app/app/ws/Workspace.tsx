@@ -123,7 +123,7 @@ export default function Workspace({
 
         <main className="main">
           {view === "canvas" && current ? (
-            <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} myRoles={myRoles} />
+            <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} myRoles={myRoles} currentUserId={currentUserId} />
           ) : (
             <div className="main-pad">
               {view === "studio" && (

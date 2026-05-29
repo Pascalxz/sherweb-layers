@@ -7,6 +7,7 @@ import { MODULES, GOVERNANCE, outputMeta, type ModuleMeta } from "@/lib/layerDat
 import { STATUS_BADGE, type Role } from "@/lib/workflow";
 import type { WSGen } from "./types";
 import WorkflowBar from "./WorkflowBar";
+import WriterComments from "./WriterComments";
 
 // GrapesJS casse en SSR → import client-only (piège connu CLAUDE.md).
 const InlineEditor = dynamic(() => import("./InlineEditor"), {
@@ -18,7 +19,7 @@ const InlineEditor = dynamic(() => import("./InlineEditor"), {
   ),
 });
 
-type Tab = "preview" | "edit" | "code";
+type Tab = "comments" | "preview" | "edit" | "code";
 
 export default function CanvasView({
   gen,
@@ -26,12 +27,14 @@ export default function CanvasView({
   transparencyOpen = true,
   modules = MODULES,
   myRoles = [],
+  currentUserId = "",
 }: {
   gen: WSGen;
   onClose: () => void;
   transparencyOpen?: boolean;
   modules?: ModuleMeta[];
   myRoles?: Role[];
+  currentUserId?: string;
 }) {
   const canEdit =
     gen.isOwner || myRoles.includes("designer") || myRoles.includes("coder") || myRoles.includes("admin");
@@ -63,6 +66,9 @@ export default function CanvasView({
         </div>
 
         <div className="cv-tabs">
+          <button className={"cv-tab" + (tab === "comments" ? " on" : "")} onClick={() => setTab("comments")}>
+            <i className="fa-solid fa-comments"></i>Texte
+          </button>
           <button className={"cv-tab" + (tab === "preview" ? " on" : "")} onClick={() => setTab("preview")}>
             <i className="fa-solid fa-eye"></i>Aperçu
           </button>
@@ -81,6 +87,9 @@ export default function CanvasView({
 
       <div className="cv-body">
         <div className="cv-stage">
+          {tab === "comments" && (
+            <WriterComments generationId={gen.id} html={html} currentUserId={currentUserId} />
+          )}
           {tab === "preview" && (
             <div className="cv-frame-pad">
               <iframe className="cv-frame" title="preview" srcDoc={renderDocument(html)} />
