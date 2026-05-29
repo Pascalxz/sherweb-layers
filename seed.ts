@@ -307,12 +307,14 @@ async function main() {
     if (error) console.error("  ✗ brand_config:", error.message);
   }
 
-  console.log("→ Clearing knowledge_chunks (re-seed idempotent)…");
+  console.log("→ Clearing brand knowledge_chunks (re-seed idempotent)…");
   {
+    // On ne purge QUE les catégories de marque : les chunks produits (category 'product_doc',
+    // injectés par scripts/ingestProductDocs.ts) survivent à un re-seed de la marque.
     const { error } = await supabase()
       .from("knowledge_chunks")
       .delete()
-      .neq("id", "00000000-0000-0000-0000-000000000000"); // match all rows
+      .in("category", ["approved_content", "product_knowledge", "brand_assets"]);
     if (error) console.error("  ✗ clear:", error.message);
   }
 
