@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { outputMeta } from "@/lib/layerData";
+import { outputMeta, MODULES, type ModuleMeta } from "@/lib/layerData";
 import type { Engine, GenerationMetadata, Lang, OutputType } from "@/lib/types";
 import Workspace from "./ws/Workspace";
 import type { GovCategory, GovRule, WSGen } from "./ws/types";
@@ -80,17 +80,25 @@ export default async function AppHome() {
     enabled: (g.enabled as boolean) ?? true,
   }));
 
-  // Tone of voice éditable (brand_config.tone_of_voice.voice).
+  // Tone of voice + modules de contexte éditables (brand_config).
   const { data: brandRow } = await supabase
     .from("brand_config")
-    .select("tone_of_voice")
+    .select("tone_of_voice, context_modules")
     .eq("id", "default")
     .single();
   const tv = (brandRow?.tone_of_voice ?? {}) as { voice?: { fr?: string; en?: string } };
   const voice = { fr: tv.voice?.fr ?? "", en: tv.voice?.en ?? "" };
+  const cm = brandRow?.context_modules as ModuleMeta[] | null | undefined;
+  const modules = cm && cm.length > 0 ? cm : MODULES;
 
   return (
-    <Workspace initialGens={initialGens} userEmail={userEmail} governance={governance} voice={voice} />
+    <Workspace
+      initialGens={initialGens}
+      userEmail={userEmail}
+      governance={governance}
+      voice={voice}
+      modules={modules}
+    />
   );
 }
 

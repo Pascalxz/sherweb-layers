@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { outputMeta } from "@/lib/layerData";
+import { outputMeta, type ModuleMeta } from "@/lib/layerData";
 import type { GovRule, WSGen } from "./types";
 import Studio from "./Studio";
 import TeamActivity from "./TeamActivity";
@@ -22,11 +22,13 @@ export default function Workspace({
   userEmail,
   governance,
   voice,
+  modules,
 }: {
   initialGens: WSGen[];
   userEmail: string;
   governance: GovRule[];
   voice: { fr: string; en: string };
+  modules: ModuleMeta[];
 }) {
   const [view, setView] = useState<View>("studio");
   const [gens, setGens] = useState<WSGen[]>(initialGens);
@@ -110,7 +112,7 @@ export default function Workspace({
 
         <main className="main">
           {view === "canvas" && current ? (
-            <CanvasView gen={current} onClose={() => setView("activity")} />
+            <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} />
           ) : (
             <div className="main-pad">
               {view === "studio" && (
@@ -119,10 +121,11 @@ export default function Workspace({
                   onGoActivity={() => setView("activity")}
                   recent={gens}
                   userEmail={userEmail}
+                  modules={modules}
                 />
               )}
               {view === "activity" && <TeamActivity items={gens} onOpen={openCanvas} />}
-              {view === "governance" && <Governance initialRules={governance} initialVoice={voice} />}
+              {view === "governance" && <Governance initialRules={governance} initialVoice={voice} initialModules={modules} />}
             </div>
           )}
         </main>

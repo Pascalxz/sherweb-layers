@@ -3,7 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { renderDocument } from "@/lib/components/htmlLibrary";
-import { MODULES, GOVERNANCE, outputMeta } from "@/lib/layerData";
+import { MODULES, GOVERNANCE, outputMeta, type ModuleMeta } from "@/lib/layerData";
 import type { WSGen } from "./types";
 
 // GrapesJS casse en SSR → import client-only (piège connu CLAUDE.md).
@@ -22,10 +22,12 @@ export default function CanvasView({
   gen,
   onClose,
   transparencyOpen = true,
+  modules = MODULES,
 }: {
   gen: WSGen;
   onClose: () => void;
   transparencyOpen?: boolean;
+  modules?: ModuleMeta[];
 }) {
   const [tab, setTab] = useState<Tab>("preview");
   const [sideOpen, setSideOpen] = useState(transparencyOpen);
@@ -94,9 +96,9 @@ export default function CanvasView({
               </p>
 
               <div className="cv-side-sec">
-                <div className="cv-side-label">Modules de contexte · {MODULES.length}</div>
+                <div className="cv-side-label">Modules de contexte · {modules.length}</div>
                 <div className="cv-mods">
-                  {MODULES.map((m) => (
+                  {modules.map((m) => (
                     <span key={m.id} className={"cv-mod" + (m.live ? " live" : "")}>
                       <i className={"fa-solid " + m.icon}></i>
                       {m.label}

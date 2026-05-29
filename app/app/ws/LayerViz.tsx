@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { MODULES, ENGINES } from "@/lib/layerData";
+import { MODULES, ENGINES, type ModuleMeta } from "@/lib/layerData";
 
 type Phase = "idle" | "running" | "done";
 
@@ -12,6 +12,7 @@ export default function LayerViz({
   engine = "claude",
   compact = false,
   showLabels = true,
+  modules = MODULES,
 }: {
   phase?: Phase;
   activeIdx?: number;
@@ -19,8 +20,9 @@ export default function LayerViz({
   engine?: string;
   compact?: boolean;
   showLabels?: boolean;
+  modules?: ModuleMeta[];
 }) {
-  const mods = MODULES;
+  const mods = modules;
   const n = mods.length;
   const positions = useMemo(
     () =>

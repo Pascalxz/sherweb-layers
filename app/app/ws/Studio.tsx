@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Engine, Lang, OutputType } from "@/lib/types";
-import { ENGINES, OUTPUT_TYPES, MODULES, outputMeta } from "@/lib/layerData";
+import { ENGINES, OUTPUT_TYPES, MODULES, outputMeta, type ModuleMeta } from "@/lib/layerData";
 import type { WSGen } from "./types";
 import { makeTitle } from "./types";
 import LayerViz from "./LayerViz";
@@ -32,6 +32,7 @@ export default function Studio({
   userEmail,
   speed = 440,
   showLabels = true,
+  modules = MODULES,
 }: {
   onComplete: (gen: WSGen) => void;
   onGoActivity: () => void;
@@ -39,6 +40,7 @@ export default function Studio({
   userEmail: string;
   speed?: number;
   showLabels?: boolean;
+  modules?: ModuleMeta[];
 }) {
   const [prompt, setPrompt] = useState("");
   const [type, setType] = useState<OutputType>("landing_page");
@@ -62,7 +64,7 @@ export default function Studio({
     setTicker(null);
     setError(null);
 
-    const order = MODULES.map((m) => m.id);
+    const order = modules.map((m) => m.id);
     const genPromise = fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -116,7 +118,7 @@ export default function Studio({
     setTimeout(() => onComplete(gen), 750);
   }
 
-  const tickerMod = ticker ? MODULES[ticker.idx] : null;
+  const tickerMod = ticker ? modules[ticker.idx] : null;
 
   return (
     <div>
@@ -228,7 +230,7 @@ export default function Studio({
             </span>
           </div>
 
-          <LayerViz phase={phase} activeIdx={activeIdx} injected={injected} engine={engine} showLabels={showLabels} />
+          <LayerViz phase={phase} activeIdx={activeIdx} injected={injected} engine={engine} showLabels={showLabels} modules={modules} />
 
           <div className={"lp-ticker " + (phase === "idle" ? "idle" : tickerMod?.live ? "fire" : "")}>
             <div className="t-ico">
