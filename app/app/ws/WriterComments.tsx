@@ -1,6 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { wordDiff } from "@/lib/wordDiff";
+
+interface TrackChange {
+  id: string;
+  seg_index: number;
+  original: string;
+  proposed: string;
+  status: "pending" | "accepted" | "rejected";
+  email: string;
+}
 
 interface Comment {
   id: string;
