@@ -1,0 +1,130 @@
+/* =====================================================================
+   polish.css — couche de raffinement UI/UX « top 1% SaaS ».
+   Chargée EN DERNIER : n'override que ponctuellement, reste 100% on-brand
+   (bleu #0061AA, rouge #DB4227 réservé aux CTA, Montserrat, 8pt grid).
+   ===================================================================== */
+
+/* ---------- Rendu typographique net ---------- */
+.sw-app-root, .sw-app-root input, .sw-app-root textarea, .sw-app-root button {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Scrollbars discrètes (feel produit) ---------- */
+.sw-app-root *::-webkit-scrollbar { width: 10px; height: 10px; }
+.sw-app-root *::-webkit-scrollbar-thumb {
+  background: var(--sw-slate-300); border-radius: 9999px; border: 2px solid transparent; background-clip: content-box;
+}
+.sw-app-root *::-webkit-scrollbar-thumb:hover { background: var(--sw-slate-400); background-clip: content-box; }
+.sw-app-root *::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Brandbar & topbar : verre dépoli + profondeur ---------- */
+.brandbar { background: linear-gradient(180deg, #ffffff, #fcfdfe); }
+.topbar {
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+}
+.brandbar .layer-badge { font-weight: 800; }
+
+/* ---------- Rail : indicateur d'accent sur l'item actif ---------- */
+.nav-item { position: relative; border-radius: 10px; }
+.nav-item.on { font-weight: 600; }
+.nav-item.on::before {
+  content: ""; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 18px; border-radius: 0 3px 3px 0; background: var(--sw-blue-700);
+}
+.nav-item:active { transform: scale(0.985); }
+.nav-item .count { transition: all var(--dur) var(--ease-out); }
+
+/* ---------- Cartes : élévation plus riche + halo bleu au survol ---------- */
+.card { transition: box-shadow var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), border-color var(--dur); }
+.card:hover { box-shadow: 0 1px 2px rgba(9,10,12,.04), 0 8px 24px -8px rgba(9,42,74,.12); }
+.recent-card { transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur); }
+.recent-card:hover { border-color: var(--sw-blue-300); box-shadow: 0 10px 30px -12px rgba(9,42,74,.18); }
+.mod-card, .stat-card, .team-row { transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur); }
+.mod-card:hover, .team-row:hover { transform: translateY(-2px); box-shadow: 0 10px 28px -14px rgba(9,42,74,.2); border-color: var(--sw-blue-200); }
+
+/* ---------- Titres de vue : hiérarchie plus affirmée ---------- */
+.view-title { background: linear-gradient(180deg, #0c1116, #243140); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.view-eyebrow { color: var(--sw-blue-700); }
+
+/* ---------- Boutons : ressort subtil + ombre teintée ---------- */
+.btn, .gen-btn, .btn-primary, .btn-secondary {
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur) var(--ease-out), background var(--dur) var(--ease-out), color var(--dur);
+}
+.btn-brand { box-shadow: 0 1px 2px rgba(0,97,170,.18), 0 6px 16px -8px rgba(0,97,170,.5); }
+.btn-brand:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,97,170,.22), 0 12px 24px -10px rgba(0,97,170,.55); }
+.btn-brand:active { transform: translateY(0) scale(.985); }
+.btn-red, .gen-btn { box-shadow: 0 1px 2px rgba(219,66,39,.22), 0 8px 20px -8px rgba(219,66,39,.5); }
+.gen-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(219,66,39,.26), 0 14px 28px -10px rgba(219,66,39,.55); }
+.btn-ghost:hover { transform: translateY(-1px); }
+
+/* ---------- Champs : focus ring premium ---------- */
+.prompt-box:focus, .filt-select:focus, .share-row input:focus, .wc-composer textarea:focus {
+  box-shadow: 0 0 0 3px rgba(52,175,252,.20), 0 1px 2px rgba(9,42,74,.06);
+  border-color: var(--sw-blue-500);
+}
+
+/* ---------- Segmented & engine : sélection plus lisible ---------- */
+.seg-ctl { box-shadow: inset 0 1px 2px rgba(9,42,74,.05); }
+.seg-ctl button.on, .cv-tab.on { box-shadow: 0 1px 2px rgba(9,42,74,.10), 0 1px 1px rgba(9,42,74,.04); }
+.engine.on { background: linear-gradient(180deg, #ffffff, #f7fbff); }
+
+/* ---------- Tabs Canvas : soulignement actif ---------- */
+.cv-role-tabs .cv-tab { position: relative; }
+
+/* ---------- Layer panel : liseré lumineux ---------- */
+.layer-panel { box-shadow: 0 1px 2px rgba(9,42,74,.2), 0 24px 60px -28px rgba(7,42,74,.7); }
+.layer-panel::after {
+  content: ""; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(123,202,254,.18), inset 0 0 60px rgba(10,66,112,.25);
+}
+
+/* ---------- Badges & pills : un cran plus nets ---------- */
+.cv-tag, .fr-tag, .role-badge, .cv-mod { transition: all var(--dur) var(--ease-out); }
+.tb-pill { transition: border-color var(--dur), background var(--dur); }
+.tb-pill:hover { border-color: var(--sw-blue-300); background: var(--sw-white); }
+
+/* ---------- Feed activité : accent au survol ---------- */
+.feed-row { transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), border-color var(--dur); }
+.feed-row:hover { box-shadow: 0 10px 28px -14px rgba(9,42,74,.22); }
+.fr-ico { transition: transform var(--dur) var(--ease-out); }
+.feed-row:hover .fr-ico { transform: scale(1.06); }
+
+/* ---------- Apparition douce des vues ---------- */
+@keyframes sw-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.main-pad > div, .canvas-wrap { animation: sw-fade-up .34s var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) {
+  .main-pad > div, .canvas-wrap { animation: none; }
+  .card:hover, .recent-card:hover, .mod-card:hover, .team-row:hover, .feed-row:hover,
+  .btn-brand:hover, .gen-btn:hover, .btn-ghost:hover { transform: none; }
+}
+
+/* ---------- Share popover : entrée animée ---------- */
+.share-pop { animation: sw-fade-up .2s var(--ease-out) both; transform-origin: top right; }
+
+/* ---------- Transparency panel : titre en relief ---------- */
+.cv-side { box-shadow: inset 1px 0 0 rgba(9,42,74,.04); }
+.cv-side-h i { filter: drop-shadow(0 1px 1px rgba(0,97,170,.25)); }
+
+/* ---------- Workflow pipeline : connexion plus vivante ---------- */
+.wf-step.done .wf-line { background: linear-gradient(90deg, #1F8A5B, var(--color-border)); }
+.wf-step.cur .wf-dot { box-shadow: 0 0 0 3px var(--sw-blue-100), 0 4px 12px -4px rgba(0,97,170,.5); }
+
+/* ---------- Studio : barre de progression de l'injection ---------- */
+.lp-progress { height: 3px; background: rgba(123,202,254,.14); position: relative; overflow: hidden; }
+.lp-progress-bar {
+  display: block; height: 100%; border-radius: 0 3px 3px 0;
+  background: linear-gradient(90deg, #34AFFC, #0A96ED 60%, #ED573C);
+  box-shadow: 0 0 12px rgba(52,175,252,.6);
+  transition: width .42s var(--ease-out);
+}
+.lp-progress-bar::after {
+  content: ""; position: absolute; inset: 0; width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  animation: lp-shimmer 1.4s linear infinite;
+}
+@keyframes lp-shimmer { from { transform: translateX(-120%); } to { transform: translateX(320%); } }
+@media (prefers-reduced-motion: reduce) { .lp-progress-bar::after { animation: none; } }

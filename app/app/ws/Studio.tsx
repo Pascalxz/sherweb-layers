@@ -254,6 +254,12 @@ export default function Studio({
             )}
             {ticker && phase === "running" && <div className="t-prog">{ticker.pct}%</div>}
           </div>
+
+          {phase !== "idle" && (
+            <div className="lp-progress">
+              <span className="lp-progress-bar" style={{ width: `${ticker?.pct ?? 0}%` }}></span>
+            </div>
+          )}
         </div>
       </div>
 
