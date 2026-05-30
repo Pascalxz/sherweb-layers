@@ -10,6 +10,7 @@ import type { WSGen } from "./types";
 import WorkflowBar from "./WorkflowBar";
 import WriterComments from "./WriterComments";
 import ReviewPanel from "./ReviewPanel";
+import ShareMenu from "./ShareMenu";
 
 const InlineEditor = dynamic(() => import("./InlineEditor"), {
   ssr: false,
@@ -84,6 +85,7 @@ export default function CanvasView({
             </button>
           ))}
         </div>
+        <ShareMenu generationId={gen.id} canManage={isOwner || has("admin")} />
       </div>
 
       <WorkflowBar generationId={gen.id} initialStatus={gen.status} myRoles={myRoles} isOwner={isOwner} />
