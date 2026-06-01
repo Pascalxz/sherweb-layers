@@ -48,7 +48,9 @@ export default function CanvasView({
   currentUserId?: string;
 }) {
   const [tab, setTab] = useState<Tab>("writer");
-  const [sideOpen, setSideOpen] = useState(transparencyOpen);
+  // Sur Rédacteur/Designer, la colonne « corrections » + les commentaires occupent déjà
+  // beaucoup : le panneau de transparence démarre replié (récupérable via sa flèche).
+  const [sideOpen, setSideOpen] = useState(false);
   const [html, setHtml] = useState(gen.html);
   const [designMode, setDesignMode] = useState(false); // false = aperçu, true = GrapesJS
 
