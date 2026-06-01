@@ -11,6 +11,7 @@ import WorkflowBar from "./WorkflowBar";
 import WriterComments from "./WriterComments";
 import ReviewPanel from "./ReviewPanel";
 import ShareMenu from "./ShareMenu";
+import RevisePanel from "./RevisePanel";
 
 const InlineEditor = dynamic(() => import("./InlineEditor"), {
   ssr: false,
@@ -91,6 +92,11 @@ export default function CanvasView({
       <WorkflowBar generationId={gen.id} initialStatus={gen.status} myRoles={myRoles} isOwner={isOwner} />
 
       <div className="cv-body">
+        {(tab === "writer" || tab === "design") && (
+          <div className="cv-revise-col">
+            <RevisePanel generationId={gen.id} canEdit={canWriter || canDesign} onRevised={(h) => setHtml(h)} />
+          </div>
+        )}
         <div className="cv-stage">
           {tab === "writer" && (
             <WriterComments
