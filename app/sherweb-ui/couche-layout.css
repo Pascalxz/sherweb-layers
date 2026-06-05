@@ -1,0 +1,110 @@
+/* =====================================================================
+   « La couche » — refonte de la DISPOSITION uniquement.
+   Look Sherweb conservé (bleu/rouge, Montserrat, badges) : on ne touche
+   ni aux couleurs ni à la typo. On apaise la mise en page façon Claude :
+   plus d'air, surfaces aplaties, hiérarchie plus calme, rythme régulier.
+   100 % SCOPÉ sous .couche-clean / .main-couche — le reste de l'app
+   (Studio, Activité, Rôles, Canvas) n'est pas affecté.
+   ===================================================================== */
+
+/* Fond plein cadre légèrement plus clair pour aérer (toujours neutre Sherweb) */
+.main-couche {
+  background: #fbfcfd;
+}
+.main-couche .main-pad {
+  max-width: 1180px;
+  padding-top: 44px;
+  padding-bottom: 96px;
+}
+
+/* ---------- En-tête : plus d'air, hiérarchie plus calme ---------- */
+.couche-clean .view-head {
+  margin-bottom: 40px;
+}
+.couche-clean .view-title {
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+.couche-clean .view-sub {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 68ch;
+}
+
+/* ---------- Cartes : aplaties, hairline, généreuses ---------- */
+.couche-clean .gov-grid {
+  gap: 28px;
+  margin-bottom: 52px;
+}
+.couche-clean .card {
+  border-radius: 16px;
+  box-shadow: none;
+  border-color: var(--sw-slate-200);
+}
+.couche-clean .gov-grid .card {
+  border-radius: 16px;
+}
+.couche-clean .card:hover {
+  box-shadow: none;
+  transform: none;
+  border-color: var(--sw-slate-300);
+}
+.couche-clean .card-pad {
+  padding: 28px 30px;
+}
+.couche-clean .card-h {
+  font-size: 15px;
+  letter-spacing: -0.1px;
+  margin-bottom: 18px;
+}
+
+/* ---------- Tone of voice : presets + blocs plus aérés ---------- */
+.couche-clean .chips {
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.couche-clean .chip {
+  padding: 7px 14px;
+}
+.couche-clean .tov-block {
+  gap: 16px;
+  padding: 18px 0;
+}
+
+/* ---------- Règles de gouvernance : lignes respirantes ---------- */
+.couche-clean .gov-rule {
+  padding: 16px 0;
+  gap: 12px;
+}
+
+/* ---------- Séparation nette avant les modules ---------- */
+.couche-clean .section-h {
+  font-size: 15px;
+  letter-spacing: -0.1px;
+  margin: 8px 0 22px;
+}
+
+/* ---------- Modules de contexte : grille calme et aplatie ---------- */
+.couche-clean .mod-grid {
+  gap: 18px;
+}
+.couche-clean .mod-card {
+  border-radius: 16px;
+  box-shadow: none;
+  border-color: var(--sw-slate-200);
+  padding: 24px 22px 22px;
+}
+.couche-clean .mod-card:hover {
+  box-shadow: none;
+  transform: none;
+  border-color: var(--sw-slate-300);
+}
+.couche-clean .mod-ico {
+  margin-bottom: 16px;
+}
+.couche-clean .mod-sub {
+  margin-bottom: 16px;
+}
