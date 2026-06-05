@@ -121,7 +121,7 @@ export default function Workspace({
           </div>
         </nav>
 
-        <main className="main">
+        <main className={"main" + (view === "governance" ? " main-couche" : "")}>
           {view === "canvas" && current ? (
             <CanvasView gen={current} onClose={() => setView("activity")} modules={modules} myRoles={myRoles} currentUserId={currentUserId} />
           ) : (

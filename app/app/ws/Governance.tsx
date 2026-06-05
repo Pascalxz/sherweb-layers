@@ -157,7 +157,7 @@ export default function Governance({
   const activeCount = rules.filter((r) => r.enabled).length;
 
   return (
-    <div>
+    <div className="couche-clean">
       <div className="view-head">
         <p className="view-eyebrow">Cœur du produit</p>
         <h1 className="view-title">La couche : gouvernance &amp; tone of voice</h1>
